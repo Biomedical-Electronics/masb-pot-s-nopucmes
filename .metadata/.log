@@ -1,0 +1,29 @@
+!SESSION 2021-05-04 14:25:42.925 -----------------------------------------------
+eclipse.buildId=Version 1.5.0
+java.version=1.8.0_272
+java.vendor=AdoptOpenJDK
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=es_ES
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2021-05-04 14:25:55.616
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2021-05-04 14:25:55.688
+!MESSAGE Log4j initialized with config file C:\Users\PAQUI\Desktop\Universidad\4\MASB\masb-pot-s-nopucmes\.metadata\.log4j.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 4 4 2021-05-04 14:26:07.969
+!MESSAGE com.st.stm32cube.ide.mcu.ide/META-INF/version/build_ref file not found, build reference will not be reported into properties
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2021-05-04 14:26:22.677
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY org.eclipse.cdt.core 1 0 2021-05-04 14:29:32.124
+!MESSAGE Indexed 'masb-pot-s-firmware' (24 sources, 83 headers) in 3.33 sec: 4,851 declarations; 24,635 references; 0 unresolved inclusions; 1 syntax errors; 2 unresolved names (0.0068%)
+
+!ENTRY org.eclipse.ui.ide 2 4 2021-05-04 14:30:06.542
+!MESSAGE Problems occurred closing the selected resources.
+!SUBENTRY 1 org.eclipse.core.resources 2 234 2021-05-04 14:30:06.542
+!MESSAGE The project description file (.project) for 'masb-pot-s-firmware' was missing.  This file contains important information about the project.  A new project description file has been created, but some information about the project may have been lost.
+
+!ENTRY org.eclipse.cdt.core 1 0 2021-05-04 14:31:00.676
+!MESSAGE Indexed 'masb-pot-s-firmware' (28 sources, 87 headers) in 2.36 sec: 4,967 declarations; 24,898 references; 0 unresolved inclusions; 1 syntax errors; 2 unresolved names (0.0067%)
