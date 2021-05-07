@@ -24,11 +24,11 @@
 #define STOP_MEAS			0x03
 
 #ifndef TRUE
-    #define TRUE				1
+#define TRUE				1
 #endif
 
 #ifndef FALSE
-    #define FALSE				0
+#define FALSE				0
 #endif
 
 struct Data_S {
