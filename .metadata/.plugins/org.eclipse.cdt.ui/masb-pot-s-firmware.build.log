@@ -1,0 +1,33 @@
+22:49:33 **** Build of configuration Debug for project masb-pot-s-firmware ****
+make -j8 all 
+arm-none-eabi-gcc "../Core/Src/components/masb_comm_s.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F401xE -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/components/masb_comm_s.d" -MT"Core/Src/components/masb_comm_s.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/components/masb_comm_s.o"
+arm-none-eabi-gcc "../Core/Src/components/stm32main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F401xE -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/components/stm32main.d" -MT"Core/Src/components/stm32main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/components/stm32main.o"
+arm-none-eabi-gcc "../Core/Src/components/ad5280_driver.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F401xE -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/components/ad5280_driver.d" -MT"Core/Src/components/ad5280_driver.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/components/ad5280_driver.o"
+arm-none-eabi-gcc "../Core/Src/components/i2c_lib.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F401xE -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/components/i2c_lib.d" -MT"Core/Src/components/i2c_lib.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/components/i2c_lib.o"
+arm-none-eabi-gcc "../Core/Src/components/mcp4725_driver.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F401xE -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/components/mcp4725_driver.d" -MT"Core/Src/components/mcp4725_driver.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/components/mcp4725_driver.o"
+In file included from ../Core/Src/components/i2c_lib.c:1:0:
+../Core/Src/components/../../Inc/components/I2C_lib.h:22:15: error: unknown type name 'I2C_HandleTypeDef'; did you mean 'ADC_HandleTypeDef'?
+ void I2C_Init(I2C_HandleTypeDef *i2cHandler);
+               ^~~~~~~~~~~~~~~~~
+               ADC_HandleTypeDef
+../Core/Src/components/i2c_lib.c:3:8: error: unknown type name 'I2C_HandleTypeDef'
+ static I2C_HandleTypeDef *hi2c;
+        ^~~~~~~~~~~~~~~~~
+../Core/Src/components/stm32main.c: In function 'setup':
+../Core/Src/components/stm32main.c:16:2: warning: implicit declaration of function 'MASB_COMM_S_setUart'; did you mean 'MASB_COMM_S_sendData'? [-Wimplicit-function-declaration]
+  MASB_COMM_S_setUart(handles->huart);
+  ^~~~~~~~~~~~~~~~~~~
+  MASB_COMM_S_sendData
+../Core/Src/components/i2c_lib.c:5:15: error: unknown type name 'I2C_HandleTypeDef'; did you mean 'ADC_HandleTypeDef'?
+ void I2C_Init(I2C_HandleTypeDef *i2cHandler) {
+               ^~~~~~~~~~~~~~~~~
+               ADC_HandleTypeDef
+../Core/Src/components/i2c_lib.c:3:27: warning: 'hi2c' defined but not used [-Wunused-variable]
+ static I2C_HandleTypeDef *hi2c;
+                           ^~~~
+make: *** [Core/Src/components/subdir.mk:47: Core/Src/components/i2c_lib.o] Error 1
+make: *** Waiting for unfinished jobs....
+"make -j8 all" terminated with exit code 2. Build might be incomplete.
+
+22:49:35 Build Failed. 5 errors, 2 warnings. (took 1s.955ms)
+
