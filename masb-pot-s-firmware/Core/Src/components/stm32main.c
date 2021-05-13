@@ -14,17 +14,18 @@ struct CV_Configuration_S cvConfiguration;
 struct CA_Configuration_S caConfiguration;
 struct Data_S data;
 
-void setup(struct Handles_S *handles) {
+void setup(struct Handles_S *handles) {  // Esta parte se ejecutara una vez
 	MASB_COMM_S_waitForMessage();
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 1);  // Habilitacion de la PMI (1 = PMU habilitada)
 }
 
 
 void loop(void) {
-	if (MASB_COMM_S_dataReceived()) { // Si se ha recibido un mensaje...
+	if (MASB_COMM_S_dataReceived()) {   // Si se ha recibido un mensaje...
 
 		switch(MASB_COMM_S_command()) { // Miramos que comando hemos recibido
 
-			case START_CV_MEAS: // Si hemos recibido START_CV_MEAS
+			case START_CV_MEAS:    // Si hemos recibido START_CV_MEAS
 
 				// Leemos la configuracion que se nos ha enviado en el mensaje y
 				// la guardamos en la variable cvConfiguration
@@ -49,9 +50,9 @@ void loop(void) {
 	 		// Aqui iria todo el codigo de gestion de la medicion que hareis en el proyecto
 	        // si no quereis implementar el comando de stop.
 
-	 		break;
+				break;
 
-			case START_CA_MEAS:
+			case START_CA_MEAS:    // Si hemos recibido START_CA_MEAS
 
 				caConfiguration = MASB_COMM_S_getCaConfiguration();
 
@@ -72,7 +73,7 @@ void loop(void) {
 				break;
 
 
-			case STOP_MEAS: // Si hemos recibido STOP_MEAS
+			case STOP_MEAS:        // Si hemos recibido STOP_MEAS
 
 				/*
 				 * Debemos de enviar esto desde CoolTerm:
@@ -82,7 +83,7 @@ void loop(void) {
 
 	 		// Aqui iria el codigo para tener la medicion si implementais el comando stop.
 
-	 		break;
+				break;
 
 	 		default: // En el caso que se envia un comando que no exista
 
@@ -114,7 +115,7 @@ void loop(void) {
 
 		}
 
-	// Una vez procesado los comando, esperamos el siguiente
+	// Una vez procesado los comando, esperamos el siguiente mensaje
 	MASB_COMM_S_waitForMessage();
 
 	}
