@@ -11,14 +11,15 @@
 #include "components/masb_comm_s.h"        // Necesitamos caConfiguration
 //#include "components/mcp4725_drive.h"      // Funcion para fijar el voltaje
 //#include "components/timer.h"              // header del archivo timer
+//#include "components/stm32main.h"          // Para utilizar el setup()
 
 extern TIM_HandleTypeDef htim2;
 
-void Chronoamperometry_Value(struct CA_Configuration_S caConfiguration){
+void Chronoamperometry_Config(struct CA_Configuration_S caConfiguration){
 
 	double eDC = caConfiguration.eDC;
 
-	Voltage2DAC(eDC);   // Fijamos el valor de Vcell como eDC
+	MCP4725_SetOutputVoltage(hdac, eDC);   // Fijamos el valor de Vcell como eDC
 
 	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, 1);  // Cerramos rele (EN - HIGH (1))
 
@@ -30,33 +31,29 @@ void Chronoamperometry_Value(struct CA_Configuration_S caConfiguration){
 	// (samplingPeriod). Dividimos el tiempo total (segundos) entre el tiempo
 	// de una adquisición (ms) dividido entre 1000.
 
-	uint16_t Num_Measurements = ((measurement_T/(sampling_P/1000))* 4096.0f);
+	uint16_t Max_Measurements = ((measurement_T/(sampling_P/1000)) * 4096.0f);
 
-	uint16_t measurements = 0;
+	uint16_t Num_Measurement = 0;
 
-	timerConfiguration(sampling_P);
+	uint8_t Estado = CA;
 
-	// Loop mientras el numero de medidas sea menor al total
+	timerConfiguration(sampling_P); // Configuramos el timer con el periodo etc
 
-	while (measurements <= Num_Measurements){
-
-		HAL_TIM_Base_Start(&htim2); // iniciamos timer
-
-		if (measurements == Num_Measurements){
-			// Estado = "IDLE"; (?)
-
-		}
-
-		// Deberiamos recibir los datos caudno el timer sea igual a sampling_P
-
-		HAL_TIM_OC_Start(&htim2, TIM_CHANNEL_1);
-
-		// Sumamos una medida:
-
-		measurements++;
-
-	}
-
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, 0);  // Abrimos rele (EN - LOW (0))
+	HAL_TIM_Base_Start(&htim2);          // Iniciamos el timer
 
 }
+
+void Chronoamperometry_Value(Num_Measurement, Max_Measurements){
+
+	// HACES LA MEDIDA A LOS X MS
+
+	Num_Measurement++;
+
+	if (Num_Measurement == Max_Measurements){
+		HAL_TIM_Base_Stop(&htim2);
+		uint16_t Estado = IDLE;  // (?)
+		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, 0);  // Abrimos rele (EN - LOW (0))
+	}
+
+}
+
