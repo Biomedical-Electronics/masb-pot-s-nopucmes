@@ -21,6 +21,10 @@ struct CA_Configuration_S {
 
 };
 
-void Chronoamperometry_Value(struct CA_Configuration_S caConfiguration);
+// Prototypes:
+
+void Chronoamperometry_Config(struct CA_Configuration_S caConfiguration);
+
+void Chronoamperometry_Value(Num_Measurement, Max_Measurements);
 
 #endif /* INC_COMPONENTS_CHRONOAMPEROMETRY_H_ */
