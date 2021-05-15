@@ -7,7 +7,11 @@
 
 #include "components/stm32main.h"
 #include "components/masb_comm_s.h"
+#include "components/ad5280_driver.h"
+#include "components/mcp4725_driver.h"
+#include "components/i2c_lib.h"
 
+extern I2C_HandleTypeDef hi2c1;
 extern UART_HandleTypeDef huart2;
 
 struct CV_Configuration_S cvConfiguration;
@@ -16,7 +20,43 @@ struct Data_S data;
 
 void setup(struct Handles_S *handles) {  // Esta parte se ejecutara una vez
 	MASB_COMM_S_waitForMessage();
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 1);  // Habilitacion de la PMI (1 = PMU habilitada)
+
+	//================================== I2C =======================================
+	I2C_Init(&hi2c1);
+
+	//=========================== Potenciometro ====================================
+	// Creamos el handle de la libreria.
+	AD5280_Handle_T hpot = NULL;
+
+	hpot = AD5280_Init();
+
+	// Configuramos su direccion I2C de esclavo, su resistencia total (hay
+	// diferentes modelos; este tiene 50kohms) e indicamos que funcion queremos que
+	// se encargue de la escritura a traves del I2C. Utilizaremos la funcion
+	// I2C_Write de la libreria i2c_lib.
+	AD5280_ConfigSlaveAddress(hpot, 0x2C);
+	AD5280_ConfigNominalResistorValue(hpot, 50e3f);
+	AD5280_ConfigWriteFunction(hpot, I2C_Write);
+
+	// Fijamos la resistencia de, por ejemplo, 12kohms.
+	AD5280_SetWBResistance(hpot, 12e3f);
+
+	//================================== DAC =======================================
+	// Creamos el handle de la libreria.
+	MCP4725_Handle_T hdac = NULL;
+
+	hdac = MCP4725_Init();
+
+	// Configuramos la direccion I2C de esclavo, su tension de referencia (que es la
+	// de alimentacion) e indicamos que funcion queremos que se encargue de la
+	// escritura a traves del I2C. Utilizaremos la funcion I2C_Write de la libreria
+	// i2c_lib.
+	MCP4725_ConfigSlaveAddress(hdac, 0x66);
+	MCP4725_ConfigVoltageReference(hdac, 4.0f);
+	MCP4725_ConfigWriteFunction(hdac, I2C_Write);
+
+
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 1);  // Habilitamos la PMU (1 = PMU habilitada)
 }
 
 
