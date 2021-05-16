@@ -22,7 +22,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "components/stm32main.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
