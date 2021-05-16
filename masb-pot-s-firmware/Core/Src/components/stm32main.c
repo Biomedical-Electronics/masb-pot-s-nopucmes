@@ -10,6 +10,7 @@
 #include "components/ad5280_driver.h"
 #include "components/mcp4725_driver.h"
 #include "components/i2c_lib.h"
+#include "components/chronoamperometry.h"
 
 extern I2C_HandleTypeDef hi2c1;
 extern UART_HandleTypeDef huart2;
@@ -99,6 +100,9 @@ void loop(void) {
 
 				caConfiguration = MASB_COMM_S_getCaConfiguration();
 
+				void Chronoamperometry_Config(struct CA_Configuration_S caConfiguration);
+
+
 				/* Mensaje a enviar desde CoolTerm para hacer comprobacion
 				 * eDC = 0.3 V
 				 * samplingPeriodMs = 10 ms
@@ -166,6 +170,25 @@ void loop(void) {
 	// Aqui es donde deberia de ir el codigo de control de las mediciones si se quiere implementar
 	// el comando de STOP.
 
+	/*
+	 * IDEA:
 
+	else{
+
+		switch(ESTADO) {
+			case CV:
+
+			case CA:
+
+				void Chronoamperometry_Value(Num_Measurement, Max_Measurements)
+
+
+			case IDLE:
+
+
+		}
+
+	}
+	*/
 
 }
