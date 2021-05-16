@@ -45,6 +45,7 @@ struct Data_S {
 };
 
 // Prototypes.
+void MASB_COMM_S_setUart(UART_HandleTypeDef *newHuart);
 void MASB_COMM_S_waitForMessage(void);
 _Bool MASB_COMM_S_dataReceived(void);
 uint8_t MASB_COMM_S_command(void);
