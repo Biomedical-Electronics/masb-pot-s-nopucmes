@@ -19,6 +19,9 @@ struct CA_Configuration_S caConfiguration;
 struct Data_S data;
 
 void setup(struct Handles_S *handles) {  // Esta parte se ejecutara una vez
+
+	MASB_COMM_S_setUart(handles->huart);
+
 	MASB_COMM_S_waitForMessage();
 
 	//================================== I2C =======================================
