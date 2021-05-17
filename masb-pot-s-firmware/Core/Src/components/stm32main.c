@@ -7,6 +7,8 @@
 
 #include "components/stm32main.h"
 #include "components/masb_comm_s.h"
+
+
 #include "components/ad5280_driver.h"
 #include "components/mcp4725_driver.h"
 #include "components/i2c_lib.h"
@@ -19,7 +21,12 @@ struct CV_Configuration_S cvConfiguration;
 struct CA_Configuration_S caConfiguration;
 struct Data_S data;
 
+AD5280_Handle_T hpot = NULL;
+MCP4725_Handle_T hdac = NULL;
+
 void setup(struct Handles_S *handles) {  // Esta parte se ejecutara una vez
+
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 1);  // Habilitamos la PMU (1 = PMU habilitada)
 
 	MASB_COMM_S_setUart(handles->huart);
 
@@ -30,8 +37,6 @@ void setup(struct Handles_S *handles) {  // Esta parte se ejecutara una vez
 
 	//=========================== Potenciometro ====================================
 	// Creamos el handle de la libreria.
-	AD5280_Handle_T hpot = NULL;
-
 	hpot = AD5280_Init();
 
 	// Configuramos su direccion I2C de esclavo, su resistencia total (hay
@@ -47,8 +52,6 @@ void setup(struct Handles_S *handles) {  // Esta parte se ejecutara una vez
 
 	//================================== DAC =======================================
 	// Creamos el handle de la libreria.
-	MCP4725_Handle_T hdac = NULL;
-
 	hdac = MCP4725_Init();
 
 	// Configuramos la direccion I2C de esclavo, su tension de referencia (que es la
@@ -59,8 +62,6 @@ void setup(struct Handles_S *handles) {  // Esta parte se ejecutara una vez
 	MCP4725_ConfigVoltageReference(hdac, 4.0f);
 	MCP4725_ConfigWriteFunction(hdac, I2C_Write);
 
-
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 1);  // Habilitamos la PMU (1 = PMU habilitada)
 }
 
 
@@ -119,7 +120,6 @@ void loop(void) {
 
 				break;
 
-
 			case STOP_MEAS:        // Si hemos recibido STOP_MEAS
 
 				/*
@@ -169,26 +169,5 @@ void loop(void) {
 
 	// Aqui es donde deberia de ir el codigo de control de las mediciones si se quiere implementar
 	// el comando de STOP.
-
-	/*
-	 * IDEA:
-
-	else{
-
-		switch(ESTADO) {
-			case CV:
-
-			case CA:
-
-				void Chronoamperometry_Value(Num_Measurement, Max_Measurements)
-
-
-			case IDLE:
-
-
-		}
-
-	}
-	*/
 
 }
