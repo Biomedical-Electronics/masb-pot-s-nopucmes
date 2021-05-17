@@ -6,7 +6,7 @@
  */
 
 #include "components/timer.h"
-
+/*
 void Timer_Config(uint32_t Sam_Per){
 
 	// Calculamos el número de ticks que queremos, este
@@ -20,4 +20,22 @@ void Timer_Config(uint32_t Sam_Per){
 		htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
 		htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
 
+}
+*/
+uint32_t point=0; //variable punto que enviemos al host
+
+void HAL_TIM_PeriodElapsedCallback(struct CA_Configuration_S caConfiguration){
+	HAL_ADC_Start(&hadc1); // iniciamos la conversion
+	uint32_t measurement1=HAL_ADC_GetValue (&hadc1);
+	uint32_t measurement2=HAL_ADC_GetValue (&hadc1);
+	double vcell=(1.65-measurement1*3.3/(1023))*2;//formula 2
+	double icell=((1.65-measurement1*3.3/(1023))*2)/10000;//formula 3 (dividido rtia)
+	counter+=caConfiguration.samplingPeriodms;
+	point++;
+	data.point=point;
+	data.timeMs=point*samplingPeriodMs;
+	data.voltage=vcell;
+	data.current=icell;
+
+	MASB_COMM_S_SendData();
 }
