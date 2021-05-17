@@ -8,52 +8,40 @@
   */
 
 #include "components/chronoamperometry.h"  // header de chronoamperometry
-#include "components/masb_comm_s.h"        // Necesitamos caConfiguration
-//#include "components/mcp4725_drive.h"      // Funcion para fijar el voltaje
-//#include "components/timer.h"              // header del archivo timer
-//#include "components/stm32main.h"          // Para utilizar el setup()
+
 
 extern TIM_HandleTypeDef htim2;
 
 void Chronoamperometry_Config(struct CA_Configuration_S caConfiguration){
 
-	double eDC = caConfiguration.eDC;
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, 1);                // Cerramos rele (EN - HIGH (1))
 
-	MCP4725_SetOutputVoltage(hdac, eDC);   // Fijamos el valor de Vcell como eDC
+	float Vdac = (float)(1.65-(caConfiguration.eDC/2.0));   // Formula 1
 
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, 1);  // Cerramos rele (EN - HIGH (1))
-
-	uint32_t sampling_P = caConfiguration.samplingPeriodMs;
-	uint32_t measurement_T = caConfiguration.measurementTime;
+	MCP4725_SetOutputVoltage(hdac, vdac);   // Fijamos el valor de Vcell como eDC
 
 	// A continuación, sabiendo el tiempo de cada medicion y el tiempo total
 	// podemos saber las mediciones que tenemos que hacer, cada medicion durará
 	// (samplingPeriod). Dividimos el tiempo total (segundos) entre el tiempo
 	// de una adquisición (ms) dividido entre 1000.
 
-	uint16_t Max_Measurements = ((measurement_T/(sampling_P/1000)) * 4096.0f);
+	__HAL_TIM_SET_AUTORELOAD(&htim2, caConfiguration.samplingPeriodMs);
 
-	uint16_t Num_Measurement = 0;
-
-	uint8_t Estado = CA;
-
-	timerConfiguration(sampling_P); // Configuramos el timer con el periodo etc
-
-	HAL_TIM_Base_Start(&htim2);          // Iniciamos el timer
+	HAL_TIM_Base_Start_IT(&htim2);            // Iniciamos el timer
 
 }
 
-void Chronoamperometry_Value(Num_Measurement, Max_Measurements){
+void Chronoamperometry_Value(struct CA_Configuration_S caConfiguration){
 
-	// HACES LA MEDIDA A LOS X MS
+	uint32_t counter = 0;
 
-	Num_Measurement++;
+	while(counter <= caConfiguration.measurementTime){}
 
-	if (Num_Measurement == Max_Measurements){
-		HAL_TIM_Base_Stop(&htim2);
-		uint16_t Estado = IDLE;  // (?)
-		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, 0);  // Abrimos rele (EN - LOW (0))
-	}
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, 0);  // Abrimos rele (EN - LOW (0))
+
+	__HAL_TIM_SET_COUNTER(&htim2, 0);         // Reiniciamos el contador del timer a 0
+
+	HAL_TIM_Base_Stop_IT(&htim2);             // Detenemos el timer al finalizar la medición
+
 
 }
-
