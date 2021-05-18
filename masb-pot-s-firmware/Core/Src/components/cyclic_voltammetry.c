@@ -33,7 +33,7 @@ void Voltammetry_Config(struct CV_Configuration_S cvConfiguration){
 
 void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 
-	uint32_t cycles = 0;
+	uint32_t cycles = 0; // we start at 0, when a cycle it has been done we will add 1 to this variable and get out of the loop
 
 	_Bool measure = FALSE;
 
@@ -45,12 +45,27 @@ void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 
 		if (measure){
 			if (vcell==vobj){
+				if (vobj==cvConfiguration.eVertex1){
+					vobj=cvConfiguration.eVertex2;
+				} else {
+					if (vobj==cvConfiguration.eVertex2){
+						vobj=cvConfiguration.eBegin;
+					} else {
+						vobj=cvConfiguration.eVertex1;
+						cycles+=1; // when vobj equals eBegin, means a cycle has been done, if we add one to cycles count,
+						// and the total num of cycles == cvConfiguration.cycles, we will get out of the loop
+					}
+				}
+
 
 			} else {
 
 				if (vcell+cvConfiguration.eStep>vobj){
+					vcell=vobj;
 
+					float vdac = (float)(1.65-(vcell/2.0)); // definim el vdac a partir del Vcell que volem donar
 
+					MCP4725_SetOutputVoltage(hdac, vdac); // administrem el voltatge al Working Electrode
 
 				} else {
 
@@ -67,8 +82,6 @@ void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 		} else {
 
 		}
-
-
 
 	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, 0);  // Abrimos rele (EN - LOW (0))
 
