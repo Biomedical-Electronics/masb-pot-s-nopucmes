@@ -25,17 +25,24 @@ void Timer_Config(uint32_t Sam_Per){
 uint32_t point=0; //variable punto que enviemos al host
 
 void HAL_TIM_PeriodElapsedCallback(struct CA_Configuration_S caConfiguration){
+
 	HAL_ADC_Start(&hadc1); // iniciamos la conversion
 	uint32_t measurement1=HAL_ADC_GetValue (&hadc1);
 	uint32_t measurement2=HAL_ADC_GetValue (&hadc1);
+
 	double vcell=(1.65-measurement1*3.3/(1023))*2;//formula 2
-	double icell=((1.65-measurement1*3.3/(1023))*2)/10000;//formula 3 (dividido rtia)
+	double icell=((1.65-measurement2*3.3/(1023))*2)/10000;//formula 3 (dividido rtia)
+
 	counter+=caConfiguration.samplingPeriodms;
+
 	point++;
+
+	struct Data_S data;
+
 	data.point=point;
 	data.timeMs=point*samplingPeriodMs;
 	data.voltage=vcell;
 	data.current=icell;
 
-	MASB_COMM_S_SendData();
+	MASB_COMM_S_SendData(data);
 }
