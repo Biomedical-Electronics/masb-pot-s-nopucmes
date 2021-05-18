@@ -16,7 +16,7 @@ void Chronoamperometry_Config(struct CA_Configuration_S caConfiguration){
 
 	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, 1);                // Cerramos rele (EN - HIGH (1))
 
-	float Vdac = (float)(1.65-(caConfiguration.eDC/2.0));   // Formula 1
+	float vdac = (float)(1.65-(caConfiguration.eDC/2.0));   // Formula 1
 
 	MCP4725_SetOutputVoltage(hdac, vdac);   // Fijamos el valor de Vcell como eDC
 
