@@ -9,6 +9,7 @@
 #define INC_COMPONENTS_STM32MAIN_H_
 
 #include "stm32f4xx_hal.h"
+#include "components/chronoamperometry.h" // Esto aquí o en .c?
 
 struct Handles_S {
 	UART_HandleTypeDef *huart;

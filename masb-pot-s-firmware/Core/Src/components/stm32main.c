@@ -8,7 +8,7 @@
 #include "components/stm32main.h"
 #include "components/masb_comm_s.h"
 
-
+// Esto va aquí o en el .h?
 #include "components/ad5280_driver.h"
 #include "components/mcp4725_driver.h"
 #include "components/i2c_lib.h"
@@ -103,6 +103,7 @@ void loop(void) {
 
 				void Chronoamperometry_Config(struct CA_Configuration_S caConfiguration);
 
+				void Chronoamperometry_Value(struct CA_Configuration_S caConfiguration);
 
 				/* Mensaje a enviar desde CoolTerm para hacer comprobacion
 				 * eDC = 0.3 V
