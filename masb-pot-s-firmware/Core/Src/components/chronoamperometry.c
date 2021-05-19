@@ -12,6 +12,8 @@
 
 extern TIM_HandleTypeDef htim2;
 
+extern uint32_t counter = 0;
+
 void Chronoamperometry_Config(struct CA_Configuration_S caConfiguration){
 
 	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, 1);                // Cerramos rele (EN - HIGH (1))
@@ -32,8 +34,6 @@ void Chronoamperometry_Config(struct CA_Configuration_S caConfiguration){
 }
 
 void Chronoamperometry_Value(struct CA_Configuration_S caConfiguration){
-
-	uint32_t counter = 0;
 
 	while(counter <= caConfiguration.measurementTime){}
 
