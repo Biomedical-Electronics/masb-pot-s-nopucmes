@@ -9,8 +9,6 @@
 
 #include "components/cyclic_voltammetry.h"
 
-
-
 extern TIM_HandleTypeDef htim2;
 
 void Voltammetry_Config(struct CV_Configuration_S cvConfiguration){
@@ -19,15 +17,13 @@ void Voltammetry_Config(struct CV_Configuration_S cvConfiguration){
 
 	float vdac = (float)(1.65-(cvConfiguration.eBegin/2.0));   // Formula 1
 
-	MCP4725_SetOutputVoltage(hdac, vdac);   // Fijamos el valor de Vcell a eBegin
+	MCP4725_SetOutputVoltage(hdac, vdac);    // Fijamos el valor de Vcell a eBegin
 
-	// Igualamos VObjetivo a eVertex1
-
-	// double Vobj = cvConfiguration.eVertex1;
+	estado = CV;
 
 	__HAL_TIM_SET_AUTORELOAD(&htim2, cvConfiguration.eStep/cvConfiguration.scanRate); // sampling period defined by eStep/scanRate
 
-	HAL_TIM_Base_Start_IT(&htim2);            // Iniciamos el timer
+	HAL_TIM_Base_Start_IT(&htim2);           // Iniciamos el timer
 
 }
 
@@ -39,18 +35,22 @@ void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 
 	double vcell=cvConfiguration.eBegin;
 
-	double vobj=cvConfiguration.eVertex1;
+	double vobj=cvConfiguration.eVertex1;   // Igualamos VObjetivo a eVertex1
 
 	while(cycles < cvConfiguration.cycles){
 
 		if (measure){
 			measure=FALSE;
+
 			if (vcell==vobj){
+
 				if (vobj==cvConfiguration.eVertex1){
 					vobj=cvConfiguration.eVertex2;
+
 				} else {
 					if (vobj==cvConfiguration.eVertex2){
 						vobj=cvConfiguration.eBegin;
+
 					} else {
 						vobj=cvConfiguration.eVertex1;
 						cycles+=1; // when vobj equals eBegin, means a cycle has been done, if we add one to cycles count,
@@ -90,5 +90,10 @@ void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 
 	HAL_TIM_Base_Stop_IT(&htim2);             // Detenemos el timer al finalizar la medición
 
+	estado = IDLE;
+
+	point = 0;
+
+	}
 
 }

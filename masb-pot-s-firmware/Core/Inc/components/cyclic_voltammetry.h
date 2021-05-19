@@ -13,6 +13,11 @@
 
 #include "stm32f4xx_hal.h"
 
+#include "components/masb_comm_s.h"        // Necesitamos caConfiguration
+#include "components/mcp4725_driver.h"     // Funcion para fijar el voltaje
+#include "components/stm32main.h"          // Para utilizar el setup()
+#include "components/timer.h"              // header del archivo timer
+
 struct CV_Configuration_S {
 
 	double eBegin;
