@@ -22,9 +22,9 @@ void Timer_Config(uint32_t Sam_Per){
 
 }
 */
-uint32_t point=0; //variable punto que enviemos al host
+extern uint32_t point=0; //variable punto que enviemos al host
 
-void HAL_TIM_PeriodElapsedCallback(struct CA_Configuration_S caConfiguration){
+void HAL_TIM_PeriodElapsedCallback(struct CA_Configuration_S caConfiguration, struct CV_Configuration_S cvConfiguration){
 
 	HAL_ADC_Start(&hadc1); // iniciamos la conversion
 	uint32_t measurement1=HAL_ADC_GetValue (&hadc1);
@@ -33,16 +33,31 @@ void HAL_TIM_PeriodElapsedCallback(struct CA_Configuration_S caConfiguration){
 	double vcell=(1.65-measurement1*3.3/(1023))*2;//formula 2
 	double icell=((1.65-measurement2*3.3/(1023))*2)/10000;//formula 3 (dividido rtia)
 
-	counter+=caConfiguration.samplingPeriodms;
-
 	point++;
 
-	struct Data_S data;
+	if (estado==CA){
+		counter+=caConfiguration.samplingPeriodMs;
 
-	data.point=point;
-	data.timeMs=point*samplingPeriodMs;
-	data.voltage=vcell;
-	data.current=icell;
+		struct Data_S data;
 
-	MASB_COMM_S_SendData(data);
+		data.point=point;
+		data.timeMs=point*caConfiguration.samplingPeriodMs;
+		data.voltage=vcell;
+		data.current=icell;
+
+		MASB_COMM_S_SendData(data);
+
+	}else{
+
+		struct Data_S data;
+		data.point=point;
+		data.timeMs=point*(cvConfiguration.eStep/cvConfiguration.scanRate);
+		data.voltage=vcell;
+		data.current=icell;
+
+		MASB_COMM_S_SendData(data);
+
+		measure=TRUE;
+	}
+
 }
