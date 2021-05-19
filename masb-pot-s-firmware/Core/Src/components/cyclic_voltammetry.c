@@ -44,6 +44,7 @@ void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 	while(cycles < cvConfiguration.cycles){
 
 		if (measure){
+			measure=FALSE;
 			if (vcell==vobj){
 				if (vobj==cvConfiguration.eVertex1){
 					vobj=cvConfiguration.eVertex2;
