@@ -8,12 +8,6 @@
 #include "components/stm32main.h"
 #include "components/masb_comm_s.h"
 
-// Esto va aquí o en el .h?
-#include "components/ad5280_driver.h"
-#include "components/mcp4725_driver.h"
-#include "components/i2c_lib.h"
-#include "components/chronoamperometry.h"
-
 extern I2C_HandleTypeDef hi2c1;
 extern UART_HandleTypeDef huart2;
 
@@ -23,6 +17,8 @@ struct Data_S data;
 
 AD5280_Handle_T hpot = NULL;
 MCP4725_Handle_T hdac = NULL;
+
+extern uint16_t estado = IDLE;
 
 void setup(struct Handles_S *handles) {  // Esta parte se ejecutara una vez
 
@@ -62,6 +58,10 @@ void setup(struct Handles_S *handles) {  // Esta parte se ejecutara una vez
 	MCP4725_ConfigVoltageReference(hdac, 4.0f);
 	MCP4725_ConfigWriteFunction(hdac, I2C_Write);
 
+	/*
+	 * Variable estado nos definirá el modo (CA o CV) dentro del ISR del timer
+	 */
+
 }
 
 
@@ -75,6 +75,10 @@ void loop(void) {
 				// Leemos la configuracion que se nos ha enviado en el mensaje y
 				// la guardamos en la variable cvConfiguration
 				cvConfiguration = MASB_COMM_S_getCvConfiguration();
+
+				void Voltammetry_Config(struct CV_Configuration_S cvConfiguration);
+
+				void Voltammetry_Value(struct CV_Configuration_S cvConfiguration);
 
 				/* Mensaje a enviar desde CoolTerm para hacer comprobacion
 				 * eBegin = 0.25 V
