@@ -9,7 +9,12 @@
 #define INC_COMPONENTS_STM32MAIN_H_
 
 #include "stm32f4xx_hal.h"
-#include "components/chronoamperometry.h" // Esto aquí o en .c?
+
+#include "components/ad5280_driver.h"
+#include "components/mcp4725_driver.h"
+#include "components/i2c_lib.h"
+#include "components/chronoamperometry.h"
+#include "components/cyclic_voltammetry.h"
 
 struct Handles_S {
 	UART_HandleTypeDef *huart;
