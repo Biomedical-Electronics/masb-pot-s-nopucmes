@@ -27,10 +27,11 @@ void Chronoamperometry_Config(struct CA_Configuration_S caConfiguration){
 	// (samplingPeriod). Dividimos el tiempo total (segundos) entre el tiempo
 	// de una adquisición (ms) dividido entre 1000.
 
+	estado=CA; //Estado para cuando queramos hacer cronoamperometria
+
 	__HAL_TIM_SET_AUTORELOAD(&htim2, caConfiguration.samplingPeriodMs);
 
 	HAL_TIM_Base_Start_IT(&htim2);            // Iniciamos el timer
-
 }
 
 void Chronoamperometry_Value(struct CA_Configuration_S caConfiguration){
@@ -43,5 +44,6 @@ void Chronoamperometry_Value(struct CA_Configuration_S caConfiguration){
 
 	HAL_TIM_Base_Stop_IT(&htim2);             // Detenemos el timer al finalizar la medición
 
-
+	estado= IDLE;
+	point=0;
 }
