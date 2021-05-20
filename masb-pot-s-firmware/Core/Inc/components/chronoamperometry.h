@@ -12,6 +12,11 @@
 #define INC_COMPONENTS_CHRONOAMPEROMETRY_H_
 
 #include "stm32f4xx_hal.h"
+#include "components/masb_comm_s.h"        // Necesitamos caConfiguration
+#include "components/mcp4725_driver.h"     // Funcion para fijar el voltaje
+#include "components/stm32main.h"          // Para utilizar el setup()
+#include "components/timer.h"              // header del archivo timer
+
 
 struct CA_Configuration_S {
 
@@ -20,5 +25,11 @@ struct CA_Configuration_S {
 	uint32_t measurementTime;
 
 };
+
+// Prototypes:
+
+void Chronoamperometry_Config(struct CA_Configuration_S caConfiguration);
+
+void Chronoamperometry_Value(struct CA_Configuration_S caConfiguration);
 
 #endif /* INC_COMPONENTS_CHRONOAMPEROMETRY_H_ */
