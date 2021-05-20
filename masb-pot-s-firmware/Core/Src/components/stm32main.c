@@ -18,7 +18,7 @@ struct Data_S data;
 AD5280_Handle_T hpot = NULL;
 MCP4725_Handle_T hdac = NULL;
 
-extern uint16_t estado = IDLE;
+uint16_t estado = IDLE;
 
 void setup(struct Handles_S *handles) {  // Esta parte se ejecutara una vez
 
@@ -76,9 +76,9 @@ void loop(void) {
 				// la guardamos en la variable cvConfiguration
 				cvConfiguration = MASB_COMM_S_getCvConfiguration();
 
-				void Voltammetry_Config(struct CV_Configuration_S cvConfiguration);
+				// Voltammetry_Config(cvConfiguration);
 
-				void Voltammetry_Value(struct CV_Configuration_S cvConfiguration);
+				// Voltammetry_Value(cvConfiguration);
 
 				/* Mensaje a enviar desde CoolTerm para hacer comprobacion
 				 * eBegin = 0.25 V
@@ -105,9 +105,11 @@ void loop(void) {
 
 				caConfiguration = MASB_COMM_S_getCaConfiguration();
 
-				void Chronoamperometry_Config(struct CA_Configuration_S caConfiguration);
+				Chronoamperometry_Config(caConfiguration);
 
-				void Chronoamperometry_Value(struct CA_Configuration_S caConfiguration);
+				__NOP();
+
+				Chronoamperometry_Value(caConfiguration);
 
 				/* Mensaje a enviar desde CoolTerm para hacer comprobacion
 				 * eDC = 0.3 V

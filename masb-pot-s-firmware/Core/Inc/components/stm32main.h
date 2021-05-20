@@ -16,6 +16,10 @@
 #include "components/chronoamperometry.h"
 #include "components/cyclic_voltammetry.h"
 
+extern uint16_t estado;
+
+extern MCP4725_Handle_T hdac;
+
 struct Handles_S {
 	UART_HandleTypeDef *huart;
 	ADC_HandleTypeDef *hadc;

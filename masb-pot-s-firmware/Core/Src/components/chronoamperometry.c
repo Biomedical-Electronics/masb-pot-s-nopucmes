@@ -9,10 +9,7 @@
 
 #include "components/chronoamperometry.h"  // header de chronoamperometry
 
-
-extern TIM_HandleTypeDef htim2;
-
-extern uint32_t counter = 0;
+#include "components/stm32main.h"          // Para utilizar el setup()
 
 void Chronoamperometry_Config(struct CA_Configuration_S caConfiguration){
 
@@ -29,14 +26,25 @@ void Chronoamperometry_Config(struct CA_Configuration_S caConfiguration){
 
 	estado=CA; //Estado para cuando queramos hacer cronoamperometria
 
-	__HAL_TIM_SET_AUTORELOAD(&htim2, caConfiguration.samplingPeriodMs);
+	__HAL_TIM_SET_AUTORELOAD(&htim2, (caConfiguration.samplingPeriodMs)*84000); // Trabajamos con el timer 2 es necesario multiplicar por 84000 para llegar al número de ticks (Fórmula apuntada)
 
-	HAL_TIM_Base_Start_IT(&htim2);            // Iniciamos el timer
 }
 
 void Chronoamperometry_Value(struct CA_Configuration_S caConfiguration){
 
-	while(counter <= caConfiguration.measurementTime){}
+	__NOP();
+
+	HAL_TIM_Base_Start_IT(&htim2);            // Iniciamos el timer
+
+	// uint32_t MT = caConfiguration.measurementTime;
+
+	while(counter <= caConfiguration.measurementTime){
+
+		__NOP();
+
+	}
+
+	__NOP();
 
 	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, 0);  // Abrimos rele (EN - LOW (0))
 
@@ -44,6 +52,6 @@ void Chronoamperometry_Value(struct CA_Configuration_S caConfiguration){
 
 	HAL_TIM_Base_Stop_IT(&htim2);             // Detenemos el timer al finalizar la medición
 
-	estado= IDLE;
-	point=0;
+	estado = IDLE;
+	point = 0;
 }

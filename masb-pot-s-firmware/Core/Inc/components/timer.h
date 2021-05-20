@@ -10,14 +10,22 @@
 
 #include "stm32f4xx_hal.h"
 #include "main.h"
-#include "components/stm32main.h"
+
+#include "components/masb_comm_s.h"
 
 extern TIM_HandleTypeDef htim2;
 
 extern ADC_HandleTypeDef hadc1;
 
+extern uint32_t point;
+
+extern uint32_t counter;
+
+struct CA_Configuration_S caConfiguration;
+struct CV_Configuration_S cvConfiguration;
+
 // Prototypes:
-//void Timer_Config(uint32_t Sam_Per); //
-void HAL_TIM_PeriodElapsedCallback(struct CA_Configuration_S caConfiguration);
+//void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim, struct CA_Configuration_S caConfiguration, struct CV_Configuration_S cvConfiguration);
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim);
 
 #endif /* INC_COMPONENTS_TIMER_H_ */
