@@ -9,6 +9,8 @@
 
 #include "components/cyclic_voltammetry.h"
 
+#include "components/stm32main.h"          // Para utilizar el setup()
+
 extern TIM_HandleTypeDef htim2;
 
 void Voltammetry_Config(struct CV_Configuration_S cvConfiguration){
@@ -21,13 +23,13 @@ void Voltammetry_Config(struct CV_Configuration_S cvConfiguration){
 
 	estado = CV;
 
-	__HAL_TIM_SET_AUTORELOAD(&htim2, cvConfiguration.eStep/cvConfiguration.scanRate); // sampling period defined by eStep/scanRate
-
-	HAL_TIM_Base_Start_IT(&htim2);           // Iniciamos el timer
+	__HAL_TIM_SET_AUTORELOAD(&htim2, (cvConfiguration.eStep/cvConfiguration.scanRate)*84000); // sampling period defined by eStep/scanRate
 
 }
 
 void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
+
+	HAL_TIM_Base_Start_IT(&htim2);           // Iniciamos el timer
 
 	uint32_t cycles = 0; // we start at 0, when a cycle it has been done we will add 1 to this variable and get out of the loop
 
