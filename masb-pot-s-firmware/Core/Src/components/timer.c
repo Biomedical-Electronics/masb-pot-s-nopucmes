@@ -21,6 +21,8 @@ uint32_t measurement2 = 0;
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 
+	__NOP();
+
 	HAL_ADC_Start(&hadc1); // iniciamos la conversion
 
 	// HAL_ADC_PollForConversion(&hadc1, 200); // esperamos que finalice la conversion
@@ -31,9 +33,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 
 	measurement2 = HAL_ADC_GetValue(&hadc1);
 
-	double vcell=(1.65-measurement1*3.3/(1023))*2;          // formula 2
+	uint32_t vcell=(1.65-measurement1*3.3/(1023))*2;          // formula 2
 
-	double icell=((1.65-measurement2*3.3/(1023))*2)/10000;  // formula 3 (dividido rtia)
+	uint32_t icell=((1.65-measurement2*3.3/(1023))*2)/10000;  // formula 3 (dividido rtia)
 
 	point++;
 
