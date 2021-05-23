@@ -66,6 +66,7 @@ void setup(struct Handles_S *handles) {  // Esta parte se ejecutara una vez
 
 
 void loop(void) {
+
 	if (MASB_COMM_S_dataReceived()) {   // Si se ha recibido un mensaje...
 
 		switch(MASB_COMM_S_command()) { // Miramos que comando hemos recibido

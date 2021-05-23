@@ -24,6 +24,7 @@ struct Handles_S {
 	UART_HandleTypeDef *huart;
 	ADC_HandleTypeDef *hadc;
 	I2C_HandleTypeDef *hi2c;
+	TIM_HandleTypeDef *htim2;
 
 	// Aqui añadimos los XXX_HandleTypeDef
 };

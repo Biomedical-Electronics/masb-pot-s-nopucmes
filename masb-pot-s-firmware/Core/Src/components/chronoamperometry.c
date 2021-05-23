@@ -38,7 +38,7 @@ void Chronoamperometry_Value(struct CA_Configuration_S caConfiguration){
 
 	// uint32_t MT = caConfiguration.measurementTime;
 
-	while(counter <= caConfiguration.measurementTime){
+	while(counter <= (caConfiguration.measurementTime + 1)){
 
 		__NOP();
 

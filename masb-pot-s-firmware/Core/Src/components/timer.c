@@ -29,15 +29,15 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 
 	measurement1 = HAL_ADC_GetValue(&hadc1);
 
+	int32_t vcell=(1.65-measurement1*3.3/(1023))*2;          // formula 2 MIRARLO
+
 	// HAL_ADC_PollForConversion(&hadc1, 200); // esperamos que finalice la conversion
 
 	measurement2 = HAL_ADC_GetValue(&hadc1);
 
-	uint32_t vcell=(1.65-measurement1*3.3/(1023))*2;          // formula 2
+	// int32_t icell=(((measurement2*3.3/(1023))-1.65)*2)/10000;  // formula 3 (dividido rtia)
 
-	uint32_t icell=((1.65-measurement2*3.3/(1023))*2)/10000;  // formula 3 (dividido rtia)
-
-	point++;
+	int32_t icell = ((measurement2 - 1.65)*2)/10000;
 
 	if (estado == CA){
 
@@ -70,5 +70,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 
 		measure = TRUE;
 	}*/
+
+	point++;
 
 }
