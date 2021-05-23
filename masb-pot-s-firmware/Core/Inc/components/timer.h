@@ -21,6 +21,8 @@ extern uint32_t point;
 
 extern uint32_t counter;
 
+extern _Bool measure;
+
 struct CA_Configuration_S caConfiguration;
 struct CV_Configuration_S cvConfiguration;
 

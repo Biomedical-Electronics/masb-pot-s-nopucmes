@@ -77,9 +77,9 @@ void loop(void) {
 				// la guardamos en la variable cvConfiguration
 				cvConfiguration = MASB_COMM_S_getCvConfiguration();
 
-				// Voltammetry_Config(cvConfiguration);
+				Voltammetry_Config(cvConfiguration);
 
-				// Voltammetry_Value(cvConfiguration);
+				Voltammetry_Value(cvConfiguration);
 
 				/* Mensaje a enviar desde CoolTerm para hacer comprobacion
 				 * eBegin = 0.25 V

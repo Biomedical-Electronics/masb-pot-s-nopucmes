@@ -58,9 +58,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 
 	}
 
-	/*else{
+	else{
 		cvConfiguration = MASB_COMM_S_getCvConfiguration();
+
 		struct Data_S data;
+
 		data.point=point;
 		data.timeMs=point*(cvConfiguration.eStep/cvConfiguration.scanRate);
 		data.voltage=vcell;
@@ -68,8 +70,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 
 		MASB_COMM_S_sendData(data);
 
-		measure = TRUE;
-	}*/
+		_Bool measure = TRUE;    // ESTO ESTÁ BIEN ASÍ
+
+		__NOP();
+	}
 
 	point++;
 
