@@ -104,6 +104,9 @@ int main(void)
 
   struct Handles_S myHandles;
   myHandles.huart = &huart2;
+  myHandles.hadc = &hadc1;
+  myHandles.hi2c = &hi2c1;
+  myHandles.htim2 = &htim2;
 
   setup(&myHandles);
 
