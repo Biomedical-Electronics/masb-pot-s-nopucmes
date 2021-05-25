@@ -22,6 +22,8 @@ extern uint32_t counter;
 
 extern TIM_HandleTypeDef htim2;
 
+extern struct Data_S data;
+
 struct CA_Configuration_S {
 
 	double eDC;

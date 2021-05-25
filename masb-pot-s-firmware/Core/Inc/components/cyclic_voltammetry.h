@@ -20,7 +20,7 @@
 
 extern TIM_HandleTypeDef htim2;
 
-extern _Bool measure;
+_Bool measureCV;
 
 struct CV_Configuration_S {
 

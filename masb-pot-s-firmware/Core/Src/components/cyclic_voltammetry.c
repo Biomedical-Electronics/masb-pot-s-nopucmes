@@ -21,7 +21,7 @@ void Voltammetry_Config(struct CV_Configuration_S cvConfiguration){
 
 	estado = CV;
 
-	__HAL_TIM_SET_AUTORELOAD(&htim2, (cvConfiguration.eStep/cvConfiguration.scanRate)*84000); // sampling period defined by eStep/scanRate
+	__HAL_TIM_SET_AUTORELOAD(&htim2, (cvConfiguration.eStep/cvConfiguration.scanRate*1000)*84000); // sampling period defined by eStep/scanRate
 
 }
 
@@ -33,7 +33,7 @@ void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 
 	uint32_t cycles = 0; // we start at 0, when a cycle it has been done we will add 1 to this variable and get out of the loop
 
-	_Bool measure = FALSE;
+	measureCV = FALSE;
 
 	double vcell = cvConfiguration.eBegin;
 
@@ -41,8 +41,8 @@ void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 
 	while(cycles < cvConfiguration.cycles){
 
-		if (measure){
-			measure=FALSE;
+		if (measureCV){
+			measureCV=FALSE;
 
 			if (vcell==vobj){
 
@@ -86,6 +86,9 @@ void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 
 		}
 
+
+	}
+
 	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, 0);  // Abrimos rele (EN - LOW (0))
 
 	__HAL_TIM_SET_COUNTER(&htim2, 0);         // Reiniciamos el contador del timer a 0
@@ -96,6 +99,6 @@ void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 
 	point = 0;
 
-	}
+
 
 }

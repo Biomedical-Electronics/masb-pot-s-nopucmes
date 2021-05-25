@@ -37,12 +37,23 @@ void Chronoamperometry_Value(struct CA_Configuration_S caConfiguration){
 	HAL_TIM_Base_Start_IT(&htim2);            // Iniciamos el timer
 
 	// uint32_t MT = caConfiguration.measurementTime;
+	uint32_t measurementTimeMs = caConfiguration.measurementTime * 1000;
 
-	while(counter <= (caConfiguration.measurementTime + 1)){
+	// medida instante 0
+
+
+	// struct Data_S data;
+
+
+	while(counter < measurementTimeMs+caConfiguration.samplingPeriodMs){
 
 		__NOP();
 
 	}
+
+	HAL_TIM_Base_Stop_IT(&htim2);             // Detenemos el timer al finalizar la medición
+
+	HAL_ADC_Stop(&hadc1);
 
 	__NOP();
 
@@ -50,8 +61,6 @@ void Chronoamperometry_Value(struct CA_Configuration_S caConfiguration){
 
 	__HAL_TIM_SET_COUNTER(&htim2, 0);         // Reiniciamos el contador del timer a 0
 
-	HAL_TIM_Base_Stop_IT(&htim2);             // Detenemos el timer al finalizar la medición
-
 	estado = IDLE;
-	point = 0;
+	point = 1;
 }
