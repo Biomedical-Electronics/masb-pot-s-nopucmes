@@ -19,6 +19,8 @@ extern ADC_HandleTypeDef hadc1;
 
 extern uint32_t point;
 
+extern _Bool inicio;
+
 extern uint32_t counter;
 
 extern _Bool measureCV;

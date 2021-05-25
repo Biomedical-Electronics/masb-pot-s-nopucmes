@@ -32,7 +32,7 @@ void Chronoamperometry_Config(struct CA_Configuration_S caConfiguration){
 
 void Chronoamperometry_Value(struct CA_Configuration_S caConfiguration){
 
-	__NOP();
+
 
 	HAL_TIM_Base_Start_IT(&htim2);            // Iniciamos el timer
 
@@ -47,20 +47,22 @@ void Chronoamperometry_Value(struct CA_Configuration_S caConfiguration){
 
 	while(counter < measurementTimeMs+caConfiguration.samplingPeriodMs){
 
-		__NOP();
+
 
 	}
 
 	HAL_TIM_Base_Stop_IT(&htim2);             // Detenemos el timer al finalizar la medición
 
-	HAL_ADC_Stop(&hadc1);
+	HAL_ADC_Stop(&hadc1);					  //Paramos conversion adc
 
-	__NOP();
+
 
 	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, 0);  // Abrimos rele (EN - LOW (0))
 
 	__HAL_TIM_SET_COUNTER(&htim2, 0);         // Reiniciamos el contador del timer a 0
 
-	estado = IDLE;
-	point = 1;
+	estado = IDLE; //reiniciamos variables
+	point = 0;
+	counter = 0;
+	inicio= TRUE;
 }
