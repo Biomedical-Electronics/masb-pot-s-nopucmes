@@ -9,7 +9,7 @@
 
 #include "components/cyclic_voltammetry.h"
 
-#include "components/stm32main.h"          // Para utilizar el setup()
+#include "components/stm32main.h"          // Para utilizar el setup()‍
 
 double ts = 0;
 
@@ -45,51 +45,66 @@ void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 
 	while(cycles < cvConfiguration.cycles){
 
-		if (measureCV){
-			measureCV=FALSE;
+		if (measureCV==TRUE){
+
+			__NOP();
 
 			if (vcell==vobj){
+
+				__NOP();
 
 				if (vobj==cvConfiguration.eVertex1){
 					vobj=cvConfiguration.eVertex2;
 
-				} else {
+					__NOP();
+
+				} else{
 					if (vobj==cvConfiguration.eVertex2){
+						__NOP();
+
 						vobj=cvConfiguration.eBegin;
 
 					} else {
 						vobj=cvConfiguration.eVertex1;
 						cycles += 1;   // when vobj equals eBegin, means a cycle has been done, if we add one to cycles count,
 						               // and the total num of cycles == cvConfiguration.cycles, we will get out of the loop
+						__NOP();
 					}
 				}
 
-
 			} else {
 
-				if (vcell+cvConfiguration.eStep > vobj){
+				if (ABS(vcell+cvConfiguration.eStep) > ABS(vobj)){  // ¡¡Esto hay que mirarlo!!
+
+					__NOP();
 
 					vcell=vobj;
 
 					float vdac = (float)(1.65-(vcell/2.0)); // definim el vdac a partir del Vcell que volem donar
 
-					MCP4725_SetOutputVoltage(hdac, vdac); // administrem el voltatge al Working Electrode
+					MCP4725_SetOutputVoltage(hdac, vdac);   // administrem el voltatge al Working Electrode
+
+					__NOP();
 
 				} else {
 
-					vcell+=((vobj-vcell)/abs(vobj-vcell))*cvConfiguration.eStep; // incrementem eStep a Vcell
+					__NOP();
+
+					vcell = vcell + ((vobj-vcell)/(ABS(vobj-vcell)))*cvConfiguration.eStep; // incrementem eStep a Vcell
 
 					float vdac = (float)(1.65-(vcell/2.0)); // definim el vdac a partir del Vcell que volem donar
 
-					MCP4725_SetOutputVoltage(hdac, vdac); // administrem el nou voltatge al Working Electrode
+					MCP4725_SetOutputVoltage(hdac, vdac);   // administrem el nou voltatge al Working Electrode
+
+					__NOP();
 
 				}
 
 			}
 
-		} else {
+			measureCV=FALSE;
 
-		}
+		} else {}
 
 	}
 

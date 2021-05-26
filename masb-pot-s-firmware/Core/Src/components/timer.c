@@ -25,20 +25,19 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 
 	HAL_ADC_Start(&hadc1); // iniciamos la conversion
 
-	HAL_ADC_PollForConversion(&hadc1, 200); // esperamos que finalice la conversion
+	HAL_ADC_PollForConversion(&hadc1, 200);   // esperamos que finalice la conversion
 
-	measurement1 = HAL_ADC_GetValue(&hadc1); //obtenemos primer valor adc
+	measurement1 = HAL_ADC_GetValue(&hadc1);  //obtenemos primer valor adc
 
 	double vcell=(1.65- ((double)measurement1)*3.3/(1023.0))*2.0;          // formula 2 MIRARLO
 
 	HAL_ADC_Start(&hadc1); // iniciamos la conversion
 
-	HAL_ADC_PollForConversion(&hadc1, 200); // esperamos que finalice la conversion
+	HAL_ADC_PollForConversion(&hadc1, 200);   // esperamos que finalice la conversion
 
-	measurement2 = HAL_ADC_GetValue(&hadc1); //obtenemos segundo valor adc
+	measurement2 = HAL_ADC_GetValue(&hadc1);  //obtenemos segundo valor adc
 
 	double icell=(((((double)measurement2)*3.3/(1023.0))-1.65)*2.0)/10000.0;  // formula 3 (dividido rtia)
-
 
 	if (estado == CA){ //si pedimos cronoamperometria
 
@@ -73,7 +72,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 
 		cvConfiguration = MASB_COMM_S_getCvConfiguration();
 
-		counter = counter + ts;
+		counter = counter + ts*1000;
 
 		data.point=point;
 		data.timeMs=counter;

@@ -32,8 +32,6 @@ void Chronoamperometry_Config(struct CA_Configuration_S caConfiguration){
 
 void Chronoamperometry_Value(struct CA_Configuration_S caConfiguration){
 
-
-
 	HAL_TIM_Base_Start_IT(&htim2);            // Iniciamos el timer
 
 	// uint32_t MT = caConfiguration.measurementTime;

@@ -18,6 +18,8 @@
 
 #include "components/timer.h"              // header del archivo timer
 
+#define ABS(x) ((x) > 0 ? (x) : -(x))
+
 extern TIM_HandleTypeDef htim2;
 
 _Bool measureCV;
