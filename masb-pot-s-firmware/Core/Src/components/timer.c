@@ -23,8 +23,6 @@ _Bool inicio=TRUE;//variable que controla si es el primer punto enviado
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 
-
-
 	HAL_ADC_Start(&hadc1); // iniciamos la conversion
 
 	HAL_ADC_PollForConversion(&hadc1, 200); // esperamos que finalice la conversion
@@ -45,6 +43,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 	if (estado == CA){ //si pedimos cronoamperometria
 
 		if (inicio){ // mira si es el primer punto y lo envia con valores iniciales
+
 			data.point=point;
 			data.timeMs=counter;
 			data.voltage=0;
@@ -66,21 +65,18 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 
 			MASB_COMM_S_sendData(data);
 
-
-
 		}
-
-
 
 	}
 
-	else{//si pedimos cronoamperometria
+	else{      //si pedimos cronoamperometria
+
 		cvConfiguration = MASB_COMM_S_getCvConfiguration();
 
-		struct Data_S data;
+		counter = counter + ts;
 
 		data.point=point;
-		data.timeMs=point*(cvConfiguration.eStep/cvConfiguration.scanRate);
+		data.timeMs=counter;
 		data.voltage=vcell;
 		data.current=icell;
 

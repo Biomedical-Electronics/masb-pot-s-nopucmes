@@ -11,6 +11,8 @@
 
 #include "components/stm32main.h"          // Para utilizar el setup()
 
+double ts = 0;
+
 void Voltammetry_Config(struct CV_Configuration_S cvConfiguration){
 
 	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, 1);                // Cerramos rele (EN - HIGH (1))
@@ -39,6 +41,8 @@ void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 
 	double vobj = cvConfiguration.eVertex1;   // Igualamos VObjetivo a eVertex1
 
+	ts = cvConfiguration.eStep/cvConfiguration.scanRate;
+
 	while(cycles < cvConfiguration.cycles){
 
 		if (measureCV){
@@ -55,15 +59,16 @@ void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 
 					} else {
 						vobj=cvConfiguration.eVertex1;
-						cycles+=1; // when vobj equals eBegin, means a cycle has been done, if we add one to cycles count,
-						// and the total num of cycles == cvConfiguration.cycles, we will get out of the loop
+						cycles += 1;   // when vobj equals eBegin, means a cycle has been done, if we add one to cycles count,
+						               // and the total num of cycles == cvConfiguration.cycles, we will get out of the loop
 					}
 				}
 
 
 			} else {
 
-				if (vcell+cvConfiguration.eStep>vobj){
+				if (vcell+cvConfiguration.eStep > vobj){
+
 					vcell=vobj;
 
 					float vdac = (float)(1.65-(vcell/2.0)); // definim el vdac a partir del Vcell que volem donar
@@ -86,19 +91,18 @@ void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 
 		}
 
-
 	}
+
+	HAL_TIM_Base_Stop_IT(&htim2);             // Detenemos el timer al finalizar la medición
+
+	HAL_ADC_Stop(&hadc1);					  //Paramos conversion adc
 
 	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, 0);  // Abrimos rele (EN - LOW (0))
 
 	__HAL_TIM_SET_COUNTER(&htim2, 0);         // Reiniciamos el contador del timer a 0
 
-	HAL_TIM_Base_Stop_IT(&htim2);             // Detenemos el timer al finalizar la medición
-
-	estado = IDLE;
-
+	estado = IDLE;                            // Reiniciamos variables
 	point = 0;
-
-
+	counter = 0;
 
 }

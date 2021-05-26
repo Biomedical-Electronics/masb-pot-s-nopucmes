@@ -22,6 +22,8 @@ extern TIM_HandleTypeDef htim2;
 
 _Bool measureCV;
 
+double ts;
+
 struct CV_Configuration_S {
 
 	double eBegin;
