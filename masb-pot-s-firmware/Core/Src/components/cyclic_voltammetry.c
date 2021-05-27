@@ -72,19 +72,57 @@ void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 					}
 				}
 
-			} else {
+			}
+
+			if (vcell==cvConfiguration.eVertex1){
+
+				vcell = vcell + ((vobj-vcell)/(ABS(vobj-vcell)))*cvConfiguration.eStep; // incrementem eStep a Vcell
+
+				float vdac = (float)(1.65-(vcell/2.0)); // definim el vdac a partir del Vcell que volem donar
+
+				MCP4725_SetOutputVoltage(hdac, vdac);   // administrem el nou voltatge al Working Electrode
+
+				__NOP();
+
+			}
+
+			if (vcell==cvConfiguration.eVertex2){
+
+				vcell = vcell + ((vobj-vcell)/(ABS(vobj-vcell)))*cvConfiguration.eStep; // incrementem eStep a Vcell
+
+				float vdac = (float)(1.65-(vcell/2.0)); // definim el vdac a partir del Vcell que volem donar
+
+				MCP4725_SetOutputVoltage(hdac, vdac);   // administrem el nou voltatge al Working Electrode
+
+				__NOP();
+
+			}
+
+			else {
 
 				if (ABS(vcell+cvConfiguration.eStep) > ABS(vobj)){  // ¡¡Esto hay que mirarlo!!
 
-					__NOP();
+					if (vobj==cvConfiguration.eBegin){
 
-					vcell=vobj;
+						vcell = vcell + ((vobj-vcell)/(ABS(vobj-vcell)))*cvConfiguration.eStep; // incrementem eStep a Vcell
 
-					float vdac = (float)(1.65-(vcell/2.0)); // definim el vdac a partir del Vcell que volem donar
+						float vdac = (float)(1.65-(vcell/2.0)); // definim el vdac a partir del Vcell que volem donar
 
-					MCP4725_SetOutputVoltage(hdac, vdac);   // administrem el voltatge al Working Electrode
+						MCP4725_SetOutputVoltage(hdac, vdac);   // administrem el nou voltatge al Working Electrode
 
-					__NOP();
+					}
+
+					else{
+
+						vcell=vobj;
+
+						float vdac = (float)(1.65-(vcell/2.0)); // definim el vdac a partir del Vcell que volem donar
+
+						MCP4725_SetOutputVoltage(hdac, vdac);   // administrem el voltatge al Working Electrode
+
+						__NOP();
+
+					}
 
 				} else {
 
