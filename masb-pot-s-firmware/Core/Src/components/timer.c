@@ -9,9 +9,11 @@
 
 #include "components/stm32main.h"
 
-uint32_t point = 0; // variable punto que enviemos al host
+uint32_t point_CA = 0;    // variable punto que enviemos al host para CA
 
-uint32_t counter = 0; //variable que controla el tiempo
+uint32_t point_CV = 1;    // variable punto que enviemos al host
+
+uint32_t counter = 0;  // variable que controla el tiempo
 
 uint32_t measurement1 = 0;
 
@@ -39,11 +41,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 
 	double icell=(((((double)measurement2)*3.3/(1023.0))-1.65)*2.0)/10000.0;  // formula 3 (dividido rtia)
 
+
 	if (estado == CA){ //si pedimos cronoamperometria
 
 		if (inicio){ // mira si es el primer punto y lo envia con valores iniciales
 
-			data.point=point;
+			data.point=point_CA;
 			data.timeMs=counter;
 			data.voltage=0;
 			data.current=0;
@@ -51,41 +54,44 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 			MASB_COMM_S_sendData(data);
 			inicio=FALSE;
 
+			point_CA++;
+
 		}else{ //si no es el primer punto
 
 			caConfiguration = MASB_COMM_S_getCaConfiguration();
 
 			counter = counter + caConfiguration.samplingPeriodMs;
 
-			data.point=point;
+			data.point=point_CA;
 			data.timeMs=counter;
 			data.voltage=vcell;
 			data.current=icell;
 
 			MASB_COMM_S_sendData(data);
 
-		}
+			point_CA++;
 
+		}
 	}
+
 
 	else{      //si pedimos cronoamperometria
 
-		cvConfiguration = MASB_COMM_S_getCvConfiguration();
+			counter = counter + ts*1000;
 
-		counter = counter + ts*1000;
+			data.point=point_CV;
+			data.timeMs=counter;
+			data.voltage=vcell;
+			data.current=icell;
 
-		data.point=point;
-		data.timeMs=counter;
-		data.voltage=vcell;
-		data.current=icell;
+			MASB_COMM_S_sendData(data);
 
-		MASB_COMM_S_sendData(data);
+			measureCV = TRUE;
 
-		measureCV = TRUE;
+			__NOP();
 
-		__NOP();
+			point_CV++;
+
 	}
-
-	point++;
 
 }

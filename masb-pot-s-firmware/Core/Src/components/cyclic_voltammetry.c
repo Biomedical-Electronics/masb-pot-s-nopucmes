@@ -142,7 +142,9 @@ void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 
 			measureCV=FALSE;
 
-		} else {}
+		} else {
+
+		}
 
 	}
 
@@ -155,7 +157,7 @@ void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 	__HAL_TIM_SET_COUNTER(&htim2, 0);         // Reiniciamos el contador del timer a 0
 
 	estado = IDLE;                            // Reiniciamos variables
-	point = 0;
+	point_CV = 1;
 	counter = 0;
 
 }
