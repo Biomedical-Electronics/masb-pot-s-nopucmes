@@ -43,7 +43,7 @@ void Chronoamperometry_Value(struct CA_Configuration_S caConfiguration){
 	// struct Data_S data;
 
 
-	while(counter < measurementTimeMs+caConfiguration.samplingPeriodMs){
+	while(counter < measurementTimeMs){
 
 	}
 
@@ -56,7 +56,7 @@ void Chronoamperometry_Value(struct CA_Configuration_S caConfiguration){
 	__HAL_TIM_SET_COUNTER(&htim2, 0);         // Reiniciamos el contador del timer a 0
 
 	estado = IDLE;                            // Reiniciamos variables
-	point_CA = 0;
+	point_CA = 1;
 	counter = 0;
 	inicio= TRUE;
 }

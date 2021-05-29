@@ -9,7 +9,7 @@
 
 #include "components/stm32main.h"
 
-uint32_t point_CA = 0;    // variable punto que enviemos al host para CA
+uint32_t point_CA = 1;    // variable punto que enviemos al host para CA
 
 uint32_t point_CV = 1;    // variable punto que enviemos al host
 

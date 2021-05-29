@@ -9,7 +9,9 @@
 
 #include "components/cyclic_voltammetry.h"
 
-#include "components/stm32main.h"          // Para utilizar el setup()‍
+#include "components/stm32main.h"          // Para utilizar el setup()
+
+#include "math.h" //Para utilizar roundf‍
 
 double ts = 0;
 
@@ -49,7 +51,7 @@ void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 
 			__NOP();
 
-			if (vcell==vobj){
+			if ((roundf(vcell * 100) / 100)==vobj){
 
 				__NOP();
 
@@ -60,12 +62,13 @@ void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 
 				} else{
 					if (vobj==cvConfiguration.eVertex2){
-						__NOP();
-
 						vobj=cvConfiguration.eBegin;
+
+						__NOP();
 
 					} else {
 						vobj=cvConfiguration.eVertex1;
+
 						cycles += 1;   // when vobj equals eBegin, means a cycle has been done, if we add one to cycles count,
 						               // and the total num of cycles == cvConfiguration.cycles, we will get out of the loop
 						__NOP();

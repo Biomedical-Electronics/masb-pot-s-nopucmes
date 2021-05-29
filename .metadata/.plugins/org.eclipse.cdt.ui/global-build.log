@@ -1,4 +1,4 @@
-15:12:07 **** Incremental Build of configuration Debug for project masb-pot-s-firmware ****
+18:46:36 **** Incremental Build of configuration Debug for project masb-pot-s-firmware ****
 make -j8 all 
 arm-none-eabi-gcc "../Core/Src/components/cyclic_voltammetry.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F401xE -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/components/cyclic_voltammetry.d" -MT"Core/Src/components/cyclic_voltammetry.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/components/cyclic_voltammetry.o"
 arm-none-eabi-gcc -o "masb-pot-s-firmware.elf" @"objects.list"   -mcpu=cortex-m4 -T"E:\0_EBM\cuarto\2020-21\2 sem\microcontroladores (MASB)\practicas\0 PROYECTO\0 GITHUB\masb-pot-s-nopucmes\masb-pot-s-firmware\STM32F401RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="masb-pot-s-firmware.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
@@ -8,17 +8,45 @@ arm-none-eabi-objdump -h -S  masb-pot-s-firmware.elf  > "masb-pot-s-firmware.lis
 arm-none-eabi-objcopy  -O binary  masb-pot-s-firmware.elf  "masb-pot-s-firmware.bin"
 arm-none-eabi-size   masb-pot-s-firmware.elf 
    text	   data	    bss	    dec	    hex	filename
-  24392	    124	   2240	  26756	   6884	masb-pot-s-firmware.elf
+  24532	    136	   2232	  26900	   6914	masb-pot-s-firmware.elf
 Finished building: default.size.stdout
  
 Finished building: masb-pot-s-firmware.bin
  
 Finished building: masb-pot-s-firmware.list
  
-15:12:27 **** Incremental Build of configuration Debug for project masb-pot-s-firmware ****
+18:46:58 **** Incremental Build of configuration Debug for project masb-pot-s-firmware ****
 make -j8 all 
 arm-none-eabi-size   masb-pot-s-firmware.elf 
    text	   data	    bss	    dec	    hex	filename
-  24392	    124	   2240	  26756	   6884	masb-pot-s-firmware.elf
+  24532	    136	   2232	  26900	   6914	masb-pot-s-firmware.elf
+Finished building: default.size.stdout
+ 
+18:48:22 **** Incremental Build of configuration Debug for project masb-pot-s-firmware ****
+make -j8 all 
+arm-none-eabi-size   masb-pot-s-firmware.elf 
+   text	   data	    bss	    dec	    hex	filename
+  24532	    136	   2232	  26900	   6914	masb-pot-s-firmware.elf
+Finished building: default.size.stdout
+ 
+18:51:07 **** Incremental Build of configuration Debug for project masb-pot-s-firmware ****
+make -j8 all 
+arm-none-eabi-size   masb-pot-s-firmware.elf 
+   text	   data	    bss	    dec	    hex	filename
+  24532	    136	   2232	  26900	   6914	masb-pot-s-firmware.elf
+Finished building: default.size.stdout
+ 
+18:53:51 **** Incremental Build of configuration Debug for project masb-pot-s-firmware ****
+make -j8 all 
+arm-none-eabi-size   masb-pot-s-firmware.elf 
+   text	   data	    bss	    dec	    hex	filename
+  24532	    136	   2232	  26900	   6914	masb-pot-s-firmware.elf
+Finished building: default.size.stdout
+ 
+18:55:33 **** Incremental Build of configuration Debug for project masb-pot-s-firmware ****
+make -j8 all 
+arm-none-eabi-size   masb-pot-s-firmware.elf 
+   text	   data	    bss	    dec	    hex	filename
+  24532	    136	   2232	  26900	   6914	masb-pot-s-firmware.elf
 Finished building: default.size.stdout
  
