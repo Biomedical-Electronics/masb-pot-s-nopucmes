@@ -11,7 +11,7 @@
 
 #include "components/stm32main.h"          // Para utilizar el setup()
 
-#include "math.h" //Para utilizar roundf‍
+#include "math.h"                          //Para utilizar roundf‍
 
 double ts = 0;
 
@@ -61,6 +61,7 @@ void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 */
 
 	__HAL_TIM_CLEAR_IT(&htim2, TIM_IT_UPDATE);
+
 	HAL_TIM_Base_Start_IT(&htim2);           // Iniciamos el timer
 
 	uint32_t cycles = 0; // we start at 0, when a cycle it has been done we will add 1 to this variable and get out of the loop
@@ -69,31 +70,35 @@ void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 
 	ts = cvConfiguration.eStep/cvConfiguration.scanRate;
 
+	// Double lo hemos cambiado por int32_t
+
 	double vcell = cvConfiguration.eBegin;
 
 
 	double eStep = (cvConfiguration.eBegin < cvConfiguration.eVertex1) ? cvConfiguration.eStep : -cvConfiguration.eStep;
 	double sign = (cvConfiguration.eBegin < cvConfiguration.eVertex1) ? 1 : -1;
 
-	double vobj = cvConfiguration.eVertex1;   // Igualamos VObjetivo a eVertex1
-
+	double vobj = cvConfiguration.eVertex1;       // Igualamos vObjetivo a eVertex1
 
 
 	while(cycles < cvConfiguration.cycles){
 
 		if (measureCV==TRUE){
 
+			vcell = (roundf(vcell * 100) / 100);  // Da problemas si no redondeamos vcell porque no entra en el bucle
+
 			if (sign * (vcell - vobj) >= 0 ) {
 
-				__NOP();
-
 				vcell = vobj;
+				__NOP();
 
 				if (vobj==cvConfiguration.eVertex1){
 					vobj=cvConfiguration.eVertex2;
 
 					eStep = -eStep;
 					sign = -sign;
+
+					__NOP();
 
 				}
 
@@ -111,10 +116,14 @@ void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 						vobj=cvConfiguration.eVertex1;
 						cycles += 1;   // when vobj equals eBegin, means a cycle has been done, if we add one to cycles count,
 									   // and the total num of cycles == cvConfiguration.cycles, we will get out of the loop
+					__NOP();
+
 					}
 				}
 
 				vcell = vcell + eStep;
+
+				__NOP();
 
 			}
 
@@ -126,13 +135,14 @@ void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 
 				MCP4725_SetOutputVoltage(hdac, vdac);   // administrem el nou voltatge al Working Electrode
 
+				__NOP();
+
 			}
 		measureCV=FALSE;
 
 		}
+
 	}
-
-
 
 
 /* ¡¡QUITAR!!

@@ -108,8 +108,6 @@ void loop(void) {
 
 				caConfiguration = MASB_COMM_S_getCaConfiguration();
 
-
-
 				Chronoamperometry_Config(caConfiguration);
 
 				__NOP();

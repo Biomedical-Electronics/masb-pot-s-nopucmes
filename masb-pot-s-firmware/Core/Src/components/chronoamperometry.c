@@ -59,6 +59,7 @@ void Chronoamperometry_Value(struct CA_Configuration_S caConfiguration){
 	MASB_COMM_S_sendData(data);
 
 	__HAL_TIM_CLEAR_IT(&htim2, TIM_IT_UPDATE);
+
 	HAL_TIM_Base_Start_IT(&htim2);            // Iniciamos el timer
 
 	point_CA++;
