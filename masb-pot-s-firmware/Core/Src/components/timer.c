@@ -67,7 +67,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 	else{      //si pedimos voltametria
 
 
-		HAL_ADC_Start(&hadc1); // iniciamos la conversion
+		/*HAL_ADC_Start(&hadc1); // iniciamos la conversion
 		HAL_ADC_PollForConversion(&hadc1, 200);   // esperamos que finalice la conversion
 
 		measurement1 = HAL_ADC_GetValue(&hadc1);  //obtenemos primer valor adc
@@ -88,13 +88,13 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 		data.voltage=vcell;
 		data.current=icell;
 
-		MASB_COMM_S_sendData(data);
+		MASB_COMM_S_sendData(data);*/
 
 		measureCV = TRUE;
 
 		__NOP();
 
-		point_CV++;
+		//point_CV++;
 
 	}
 

@@ -31,35 +31,6 @@ void Voltammetry_Config(struct CV_Configuration_S cvConfiguration){
 
 void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 
-	__NOP();
-
-	/*
-
-	HAL_ADC_Start(&hadc1); // iniciamos la conversion
-
-	HAL_ADC_PollForConversion(&hadc1, 200);   // esperamos que finalice la conversion
-
-	uint32_t measurement1 = HAL_ADC_GetValue(&hadc1);  //obtenemos primer valor adc
-
-	double vcell = (1.65- ((double)measurement1)*3.3/(1023.0))*2.0;          // formula 2 MIRARLO
-
-	HAL_ADC_Start(&hadc1); // iniciamos la conversion
-
-	HAL_ADC_PollForConversion(&hadc1, 200);   // esperamos que finalice la conversion
-
-	uint32_t measurement2 = HAL_ADC_GetValue(&hadc1);  //obtenemos segundo valor adc
-
-	double icell=(((((double)measurement2)*3.3/(1023.0))-1.65)*2.0)/10000.0;  // formula 3 (dividido rtia)
-
-	data.point=7;
-	data.timeMs=7;
-	data.voltage=7.0;
-	data.current=7.0;
-
-	MASB_COMM_S_sendData(data);
-
-*/
-
 	__HAL_TIM_CLEAR_IT(&htim2, TIM_IT_UPDATE);
 
 	HAL_TIM_Base_Start_IT(&htim2);           // Iniciamos el timer
@@ -70,10 +41,7 @@ void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 
 	ts = cvConfiguration.eStep/cvConfiguration.scanRate;
 
-	// Double lo hemos cambiado por int32_t
-
 	double vcell = cvConfiguration.eBegin;
-
 
 	double eStep = (cvConfiguration.eBegin < cvConfiguration.eVertex1) ? cvConfiguration.eStep : -cvConfiguration.eStep;
 	double sign = (cvConfiguration.eBegin < cvConfiguration.eVertex1) ? 1 : -1;
@@ -138,7 +106,35 @@ void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 				__NOP();
 
 			}
+
 		measureCV=FALSE;
+
+		HAL_ADC_Start(&hadc1); // iniciamos la conversion
+
+		HAL_ADC_PollForConversion(&hadc1, 200);   // esperamos que finalice la conversion
+
+		uint32_t measurement1 = HAL_ADC_GetValue(&hadc1);  //obtenemos primer valor adc
+
+		double vcell = (1.65- ((double)measurement1)*3.3/(1023.0))*2.0;          // formula 2 MIRARLO
+
+		HAL_ADC_Start(&hadc1); // iniciamos la conversion
+
+		HAL_ADC_PollForConversion(&hadc1, 200);   // esperamos que finalice la conversion
+
+		uint32_t measurement2 = HAL_ADC_GetValue(&hadc1);  //obtenemos segundo valor adc
+
+		double icell=(((((double)measurement2)*3.3/(1023.0))-1.65)*2.0)/10000.0;  // formula 3 (dividido rtia)
+
+		counter = counter + ts*1000;
+
+		data.point=point_CV;
+		data.timeMs=counter;
+		data.voltage=vcell;
+		data.current=icell;
+
+		MASB_COMM_S_sendData(data);
+
+		point_CV++;
 
 		}
 
@@ -263,5 +259,6 @@ void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 	estado = IDLE;                            // Reiniciamos variables
 	point_CV = 1;
 	counter = 0;
+
 
 }

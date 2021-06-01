@@ -79,6 +79,8 @@ void loop(void) {
 
 				Voltammetry_Config(cvConfiguration);
 
+				__NOP();
+
 				Voltammetry_Value(cvConfiguration);
 
 
