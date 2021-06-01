@@ -27,6 +27,8 @@ extern uint32_t counter;
 
 extern _Bool measureCV;
 
+extern _Bool measureCA;
+
 struct Data_S data;
 
 struct CA_Configuration_S caConfiguration;

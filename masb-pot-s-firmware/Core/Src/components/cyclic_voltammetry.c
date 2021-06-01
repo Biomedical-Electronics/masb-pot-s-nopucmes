@@ -33,18 +33,109 @@ void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 
 	__NOP();
 
+	/*
+
+	HAL_ADC_Start(&hadc1); // iniciamos la conversion
+
+	HAL_ADC_PollForConversion(&hadc1, 200);   // esperamos que finalice la conversion
+
+	uint32_t measurement1 = HAL_ADC_GetValue(&hadc1);  //obtenemos primer valor adc
+
+	double vcell = (1.65- ((double)measurement1)*3.3/(1023.0))*2.0;          // formula 2 MIRARLO
+
+	HAL_ADC_Start(&hadc1); // iniciamos la conversion
+
+	HAL_ADC_PollForConversion(&hadc1, 200);   // esperamos que finalice la conversion
+
+	uint32_t measurement2 = HAL_ADC_GetValue(&hadc1);  //obtenemos segundo valor adc
+
+	double icell=(((((double)measurement2)*3.3/(1023.0))-1.65)*2.0)/10000.0;  // formula 3 (dividido rtia)
+
+	data.point=7;
+	data.timeMs=7;
+	data.voltage=7.0;
+	data.current=7.0;
+
+	MASB_COMM_S_sendData(data);
+
+*/
+
+	__HAL_TIM_CLEAR_IT(&htim2, TIM_IT_UPDATE);
 	HAL_TIM_Base_Start_IT(&htim2);           // Iniciamos el timer
 
 	uint32_t cycles = 0; // we start at 0, when a cycle it has been done we will add 1 to this variable and get out of the loop
 
 	measureCV = FALSE;
 
+	ts = cvConfiguration.eStep/cvConfiguration.scanRate;
+
 	double vcell = cvConfiguration.eBegin;
+
+
+	double eStep = (cvConfiguration.eBegin < cvConfiguration.eVertex1) ? cvConfiguration.eStep : -cvConfiguration.eStep;
+	double sign = (cvConfiguration.eBegin < cvConfiguration.eVertex1) ? 1 : -1;
 
 	double vobj = cvConfiguration.eVertex1;   // Igualamos VObjetivo a eVertex1
 
-	ts = cvConfiguration.eStep/cvConfiguration.scanRate;
 
+
+	while(cycles < cvConfiguration.cycles){
+
+		if (measureCV==TRUE){
+
+			if (sign * (vcell - vobj) >= 0 ) {
+
+				__NOP();
+
+				vcell = vobj;
+
+				if (vobj==cvConfiguration.eVertex1){
+					vobj=cvConfiguration.eVertex2;
+
+					eStep = -eStep;
+					sign = -sign;
+
+				}
+
+				else{
+					if (vobj==cvConfiguration.eVertex2){
+						vobj=cvConfiguration.eBegin;
+
+						eStep = -eStep;
+						sign = -sign;
+
+						__NOP();
+					}
+
+					else {
+						vobj=cvConfiguration.eVertex1;
+						cycles += 1;   // when vobj equals eBegin, means a cycle has been done, if we add one to cycles count,
+									   // and the total num of cycles == cvConfiguration.cycles, we will get out of the loop
+					}
+				}
+
+				vcell = vcell + eStep;
+
+			}
+
+			else{
+
+				vcell = vcell + eStep;
+
+				float vdac = (float)(1.65-(vcell/2.0)); // definim el vdac a partir del Vcell que volem donar
+
+				MCP4725_SetOutputVoltage(hdac, vdac);   // administrem el nou voltatge al Working Electrode
+
+			}
+		measureCV=FALSE;
+
+		}
+	}
+
+
+
+
+/* ¡¡QUITAR!!
 	while(cycles < cvConfiguration.cycles){
 
 		if (measureCV==TRUE){
@@ -149,7 +240,7 @@ void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 
 		}
 
-	}
+	}*/
 
 	HAL_TIM_Base_Stop_IT(&htim2);             // Detenemos el timer al finalizar la medición
 

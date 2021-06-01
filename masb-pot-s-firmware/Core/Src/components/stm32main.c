@@ -81,6 +81,8 @@ void loop(void) {
 
 				Voltammetry_Value(cvConfiguration);
 
+
+				// ¡¡QUITAR!!
 				/* Mensaje a enviar desde CoolTerm para hacer comprobacion
 				 * eBegin = 0.25 V
 				 * eVertex1 = 0.5 V
@@ -105,6 +107,8 @@ void loop(void) {
 			case START_CA_MEAS:    // Si hemos recibido START_CA_MEAS
 
 				caConfiguration = MASB_COMM_S_getCaConfiguration();
+
+
 
 				Chronoamperometry_Config(caConfiguration);
 
@@ -142,29 +146,8 @@ void loop(void) {
 
 	 		default: // En el caso que se envia un comando que no exista
 
-	 			// Este bloque de codigo solo lo tenemos para hacer el test de que podemos enviar los
-	 			// datos correctamene. EN EL PROYECTO FINAL TENEMOS QUE ELIMINAR ESTE CODIGO y pondremos
-	 			// lo que se nos indique en los requerimientos del proyecto. Repito, es solo para
-	 			// comprobar que podemos enviar datos del microcontrolador al PC.
 
-	 			data.point = 1;
-	 			data.timeMs = 100;
-	 			data.voltage = 0.23;
-	 			data.current = 12.3e-6;
-
-	 			/*
-	 			 * Debemos de enviar esto desde CoolTerm (un comando inventado):
-	 			 * 010100
-	 			 *
-	 			 * Datos en el microcontrolador antes de la codificacion:
-	 			 * 0100000064000000713D0AD7A370CD3F7050B12083CBE93E
-	 			 *
-	 			 * Datos codificados que debes de recibir en CoolTerm:
-	 			 * 020101010264010111713D0AD7A370CD3F7050B12083CBE93E00
-	 			 */
-
-	 		// Enviamos los datos
-				MASB_COMM_S_sendData(data);
+				// MASB_COMM_S_sendData(data);
 
 				break;
 

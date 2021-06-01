@@ -21,9 +21,9 @@ uint32_t measurement2 = 0;
 
 _Bool inicio=TRUE;//variable que controla si es el primer punto enviado
 
-//void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim, struct CA_Configuration_S caConfiguration, struct CV_Configuration_S cvConfiguration)
-
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
+
+/*  ¡¡QUITAR!!
 
 	HAL_ADC_Start(&hadc1); // iniciamos la conversion
 
@@ -41,22 +41,13 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 
 	double icell=(((((double)measurement2)*3.3/(1023.0))-1.65)*2.0)/10000.0;  // formula 3 (dividido rtia)
 
+*/
 
 	if (estado == CA){ //si pedimos cronoamperometria
 
-		if (inicio){ // mira si es el primer punto y lo envia con valores iniciales
+		measureCA = TRUE;
 
-			data.point=point_CA;
-			data.timeMs=counter;
-			data.voltage=0;
-			data.current=0;
-
-			MASB_COMM_S_sendData(data);
-			inicio=FALSE;
-
-			point_CA++;
-
-		}else{ //si no es el primer punto
+		/* ¡¡QUITAR!!
 
 			caConfiguration = MASB_COMM_S_getCaConfiguration();
 
@@ -70,27 +61,39 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 			MASB_COMM_S_sendData(data);
 
 			point_CA++;
+			*/
 
-		}
 	}
-
-
 	else{      //si pedimos voltametria
 
-			counter = counter + ts*1000;
+		HAL_ADC_Start(&hadc1); // iniciamos la conversion
+		HAL_ADC_PollForConversion(&hadc1, 200);   // esperamos que finalice la conversion
 
-			data.point=point_CV;
-			data.timeMs=counter;
-			data.voltage=vcell;
-			data.current=icell;
+		measurement1 = HAL_ADC_GetValue(&hadc1);  //obtenemos primer valor adc
 
-			MASB_COMM_S_sendData(data);
+		double vcell=(1.65- ((double)measurement1)*3.3/(1023.0))*2.0;          // formula 2 MIRARLO
 
-			measureCV = TRUE;
+		HAL_ADC_Start(&hadc1); // iniciamos la conversion
+		HAL_ADC_PollForConversion(&hadc1, 200);   // esperamos que finalice la conversion
 
-			__NOP();
+		measurement2 = HAL_ADC_GetValue(&hadc1);  //obtenemos segundo valor adc
 
-			point_CV++;
+		double icell=(((((double)measurement2)*3.3/(1023.0))-1.65)*2.0)/10000.0;  // formula 3 (dividido rtia)
+
+		counter = counter + ts*1000;
+
+		data.point=point_CV;
+		data.timeMs=counter;
+		data.voltage=vcell;
+		data.current=icell;
+
+		MASB_COMM_S_sendData(data);
+
+		measureCV = TRUE;
+
+		__NOP();
+
+		point_CV++;
 
 	}
 

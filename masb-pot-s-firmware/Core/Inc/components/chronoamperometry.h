@@ -21,6 +21,9 @@
 extern uint32_t counter;
 
 extern TIM_HandleTypeDef htim2;
+extern ADC_HandleTypeDef hadc1;
+
+_Bool measureCA;
 
 extern struct Data_S data;
 

@@ -26,24 +26,79 @@ void Chronoamperometry_Config(struct CA_Configuration_S caConfiguration){
 
 	estado=CA; //Estado para cuando queramos hacer cronoamperometria
 
-	__HAL_TIM_SET_AUTORELOAD(&htim2, (caConfiguration.samplingPeriodMs)*84000); // Trabajamos con el timer 2 es necesario multiplicar por 84000 para llegar al número de ticks (Fórmula apuntada)
+	__HAL_TIM_SET_AUTORELOAD(&htim2, (uint32_t)((caConfiguration.samplingPeriodMs*84000.0))); // Trabajamos con el timer 2 es necesario multiplicar por 84000 para llegar al número de ticks (Fórmula apuntada)
+	__HAL_TIM_SET_COUNTER(&htim2, 1);
 
 }
 
 void Chronoamperometry_Value(struct CA_Configuration_S caConfiguration){
 
-	HAL_TIM_Base_Start_IT(&htim2);            // Iniciamos el timer
-
-	// uint32_t MT = caConfiguration.measurementTime;
 	uint32_t measurementTimeMs = caConfiguration.measurementTime * 1000;
 
-	// medida instante 0
+	// Medida instante 0
 
+	HAL_ADC_Start(&hadc1); // iniciamos la conversion
+	HAL_ADC_PollForConversion(&hadc1, 200);   // esperamos que finalice la conversion
 
-	// struct Data_S data;
+	uint32_t measurement1 = HAL_ADC_GetValue(&hadc1);  //obtenemos primer valor adc
 
+	double vcell=(1.65- ((double)measurement1)*3.3/(1023.0))*2.0;          // formula 2 MIRARLO
+
+	HAL_ADC_Start(&hadc1); // iniciamos la conversion
+	HAL_ADC_PollForConversion(&hadc1, 200);   // esperamos que finalice la conversion
+
+	uint32_t measurement2 = HAL_ADC_GetValue(&hadc1);  //obtenemos segundo valor adc
+
+	double icell=(((((double)measurement2)*3.3/(1023.0))-1.65)*2.0)/10000.0;  // formula 3 (dividido rtia)
+
+	data.point=1;
+	data.timeMs=0;
+	data.voltage=vcell;
+	data.current=icell;
+
+	MASB_COMM_S_sendData(data);
+
+	__HAL_TIM_CLEAR_IT(&htim2, TIM_IT_UPDATE);
+	HAL_TIM_Base_Start_IT(&htim2);            // Iniciamos el timer
+
+	point_CA++;
+
+	// Bucle while{}
 
 	while(counter < measurementTimeMs){
+
+		if (measureCA==TRUE){
+
+			HAL_ADC_Start(&hadc1); // iniciamos la conversion
+			HAL_ADC_PollForConversion(&hadc1, 200);   // esperamos que finalice la conversion
+
+			measurement1 = HAL_ADC_GetValue(&hadc1);  //obtenemos primer valor adc
+
+			vcell=(1.65- ((double)measurement1)*3.3/(1023.0))*2.0;          // formula 2 MIRARLO
+
+			HAL_ADC_Start(&hadc1); // iniciamos la conversion
+			HAL_ADC_PollForConversion(&hadc1, 200);   // esperamos que finalice la conversion
+
+			measurement2 = HAL_ADC_GetValue(&hadc1);  //obtenemos segundo valor adc
+
+			icell=(((((double)measurement2)*3.3/(1023.0))-1.65)*2.0)/10000.0;  // formula 3 (dividido rtia)
+
+			caConfiguration = MASB_COMM_S_getCaConfiguration();
+
+			counter = counter + caConfiguration.samplingPeriodMs;
+
+			data.point=point_CA;
+			data.timeMs=counter;
+			data.voltage=vcell;
+			data.current=icell;
+
+			MASB_COMM_S_sendData(data);
+
+			point_CA++;
+
+			measureCA=FALSE;
+
+		}
 
 	}
 
