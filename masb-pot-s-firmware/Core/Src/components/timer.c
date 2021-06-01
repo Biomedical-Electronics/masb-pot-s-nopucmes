@@ -75,7 +75,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 	}
 
 
-	else{      //si pedimos cronoamperometria
+	else{      //si pedimos voltametria
 
 			counter = counter + ts*1000;
 
