@@ -17,12 +17,6 @@ extern TIM_HandleTypeDef htim2;
 
 extern ADC_HandleTypeDef hadc1;
 
-extern uint32_t point_CA;
-
-extern uint32_t point_CV;
-
-extern _Bool inicio;
-
 extern uint32_t counter;
 
 extern _Bool measureCV;

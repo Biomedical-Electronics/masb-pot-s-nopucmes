@@ -11,6 +11,8 @@
 
 #include "components/stm32main.h"          // Para utilizar el setup()
 
+uint32_t point_CA = 1;    // variable punto para la cronoamperometria
+
 void Chronoamperometry_Config(struct CA_Configuration_S caConfiguration){
 
 	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, 1);                // Cerramos rele (EN - HIGH (1))
@@ -33,9 +35,9 @@ void Chronoamperometry_Config(struct CA_Configuration_S caConfiguration){
 
 void Chronoamperometry_Value(struct CA_Configuration_S caConfiguration){
 
-	uint32_t measurementTimeMs = caConfiguration.measurementTime * 1000;
+	uint32_t point_CA = 1;
 
-	// Medida instante 0
+	uint32_t measurementTimeMs = caConfiguration.measurementTime * 1000;
 
 	HAL_ADC_Start(&hadc1); // iniciamos la conversion
 	HAL_ADC_PollForConversion(&hadc1, 200);   // esperamos que finalice la conversion
@@ -51,24 +53,30 @@ void Chronoamperometry_Value(struct CA_Configuration_S caConfiguration){
 
 	double icell=(((((double)measurement2)*3.3/(1023.0))-1.65)*2.0)/10000.0;  // formula 3 (dividido rtia)
 
-	data.point=1;
+	/*
+	 * Enviamos el primer punto (1) que corresponderá a tiempo 0 y que tendrá
+	 * los valores de Vcell y Icell calculados previamente
+	 */
+
+	data.point=point_CA;
 	data.timeMs=0;
 	data.voltage=vcell;
 	data.current=icell;
 
-	MASB_COMM_S_sendData(data);
+	MASB_COMM_S_sendData(data);  // Enviamos los datos
 
 	__HAL_TIM_CLEAR_IT(&htim2, TIM_IT_UPDATE);
 
 	HAL_TIM_Base_Start_IT(&htim2);            // Iniciamos el timer
 
+	//Sumamos un punto al contador
 	point_CA++;
 
-	// Bucle while{}
+	// Bucle while hasta que el contador (counter) supera al tiempo global de medida (measurementTimeMs)
 
 	while(counter < measurementTimeMs){
 
-		if (measureCA==TRUE){
+		if (measureCA==TRUE){    // en caso de que esta variable sea TRUE y por tanto el timer ha llegado a un periodo:
 
 			HAL_ADC_Start(&hadc1); // iniciamos la conversion
 			HAL_ADC_PollForConversion(&hadc1, 200);   // esperamos que finalice la conversion
@@ -86,6 +94,11 @@ void Chronoamperometry_Value(struct CA_Configuration_S caConfiguration){
 
 			caConfiguration = MASB_COMM_S_getCaConfiguration();
 
+			/*
+			 * Enviamos el siguiente punto point_CA que corresponderá al tiempo counter y que tendrá
+			 * los valores de Vcell y Icell calculados previamente
+			 */
+
 			counter = counter + caConfiguration.samplingPeriodMs;
 
 			data.point=point_CA;
@@ -93,9 +106,15 @@ void Chronoamperometry_Value(struct CA_Configuration_S caConfiguration){
 			data.voltage=vcell;
 			data.current=icell;
 
-			MASB_COMM_S_sendData(data);
+			MASB_COMM_S_sendData(data);   // Enviamos los datos
 
-			point_CA++;
+			point_CA++; // Sumamos un punto
+
+			/*
+			 * Una vez hemos enviado los puntos e incrementaod point_CA ponemos la variable measureCV a
+			 * FALSE para evitar que entre en el bucle de nuevo. Esta variable solo volverá a ser TRUE
+			 * (y por tanto entraremos en el bucle) si se activa la función callback del timer
+			 */
 
 			measureCA=FALSE;
 
@@ -105,14 +124,14 @@ void Chronoamperometry_Value(struct CA_Configuration_S caConfiguration){
 
 	HAL_TIM_Base_Stop_IT(&htim2);             // Detenemos el timer al finalizar la medición
 
-	HAL_ADC_Stop(&hadc1);					  //Paramos conversion adc
+	HAL_ADC_Stop(&hadc1);					  // Paramos la conversion ADC
 
 	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, 0);  // Abrimos rele (EN - LOW (0))
 
 	__HAL_TIM_SET_COUNTER(&htim2, 0);         // Reiniciamos el contador del timer a 0
 
-	estado = IDLE;                            // Reiniciamos variables
+	// Reiniciamos variables a los valores iniciales
+	estado = IDLE;
 	point_CA = 1;
 	counter = 0;
-	inicio= TRUE;
 }

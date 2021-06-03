@@ -18,9 +18,11 @@
 
 #include "components/timer.h"              // header del archivo timer
 
-#define ABS(x) ((x) > 0 ? (x) : -(x))
+uint32_t counter;
 
 extern TIM_HandleTypeDef htim2;
+
+uint32_t point_CV;
 
 _Bool measureCV;
 

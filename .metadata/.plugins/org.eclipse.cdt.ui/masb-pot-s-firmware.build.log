@@ -1,21 +1,10 @@
-18:48:04 **** Incremental Build of configuration Debug for project masb-pot-s-firmware ****
+18:03:50 **** Incremental Build of configuration Debug for project masb-pot-s-firmware ****
 make -j8 all 
-arm-none-eabi-gcc "../Core/Src/components/cyclic_voltammetry.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F401xE -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/components/cyclic_voltammetry.d" -MT"Core/Src/components/cyclic_voltammetry.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/components/cyclic_voltammetry.o"
-arm-none-eabi-gcc "../Core/Src/components/stm32main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F401xE -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/components/stm32main.d" -MT"Core/Src/components/stm32main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/components/stm32main.o"
-arm-none-eabi-gcc -o "masb-pot-s-firmware.elf" @"objects.list"   -mcpu=cortex-m4 -T"E:\0_EBM\cuarto\2020-21\2 sem\microcontroladores (MASB)\practicas\0 PROYECTO\0 GITHUB\masb-pot-s-nopucmes\masb-pot-s-firmware\STM32F401RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="masb-pot-s-firmware.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: masb-pot-s-firmware.elf
- 
-arm-none-eabi-objdump -h -S  masb-pot-s-firmware.elf  > "masb-pot-s-firmware.list"
-arm-none-eabi-objcopy  -O binary  masb-pot-s-firmware.elf  "masb-pot-s-firmware.bin"
 arm-none-eabi-size   masb-pot-s-firmware.elf 
    text	   data	    bss	    dec	    hex	filename
-  22724	    136	   2224	  25084	   61fc	masb-pot-s-firmware.elf
+  22708	    128	   2224	  25060	   61e4	masb-pot-s-firmware.elf
 Finished building: default.size.stdout
  
-Finished building: masb-pot-s-firmware.bin
- 
-Finished building: masb-pot-s-firmware.list
- 
 
-18:48:08 Build Finished. 0 errors, 0 warnings. (took 3s.58ms)
+18:03:51 Build Finished. 0 errors, 0 warnings. (took 1s.60ms)
 

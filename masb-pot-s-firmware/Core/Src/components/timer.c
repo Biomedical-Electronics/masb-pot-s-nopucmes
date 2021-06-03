@@ -9,17 +9,12 @@
 
 #include "components/stm32main.h"
 
-uint32_t point_CA = 1;    // variable punto que enviemos al host para CA
-
-uint32_t point_CV = 1;    // variable punto que enviemos al host
-
 uint32_t counter = 0;  // variable que controla el tiempo
 
 uint32_t measurement1 = 0;
 
 uint32_t measurement2 = 0;
 
-_Bool inicio=TRUE;//variable que controla si es el primer punto enviado
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 
@@ -43,9 +38,15 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 
 */
 
-	if (estado == CA){ //si pedimos cronoamperometria
+	/*
+	 * En función de la variable estado entramos en la cronoamperometria (estado==CA) o a la voltametria
+	 * cíclica (estado==CV)
+	 */
 
-		measureCA = TRUE;
+	if (estado == CA){  // si pedimos cronoamperometria
+
+		measureCA = TRUE;   // Cambiamos el estado de esta variable para realizar la medición de la cronoamperometria
+
 
 		/* ¡¡QUITAR!!
 
@@ -64,8 +65,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 			*/
 
 	}
-	else{      //si pedimos voltametria
+	else{               // si pedimos voltametria ciclica
 
+		measureCV = TRUE;   // Cambiamos el estado de esta variable para realizar la medición de la voltametria
 
 		/*HAL_ADC_Start(&hadc1); // iniciamos la conversion
 		HAL_ADC_PollForConversion(&hadc1, 200);   // esperamos que finalice la conversion
@@ -90,11 +92,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 
 		MASB_COMM_S_sendData(data);*/
 
-		measureCV = TRUE;
-
 		__NOP();
-
-		//point_CV++;
 
 	}
 

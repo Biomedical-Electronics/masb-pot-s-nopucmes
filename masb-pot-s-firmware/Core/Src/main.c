@@ -102,11 +102,15 @@ int main(void)
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
 
+  // Configuramos UART, ADC, I2C, TIM2
+
   struct Handles_S myHandles;
   myHandles.huart = &huart2;
   myHandles.hadc = &hadc1;
   myHandles.hi2c = &hi2c1;
   myHandles.htim2 = &htim2;
+
+  // Ejecutamos la función setup()
 
   setup(&myHandles);
 

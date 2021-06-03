@@ -18,10 +18,15 @@
 
 #include "components/timer.h"              // header del archivo timer
 
-extern uint32_t counter;
+// Creamos las siguientes variables:
+//	En caso de ser externas se modificaran desde diversos ficheros
+
+uint32_t counter;
 
 extern TIM_HandleTypeDef htim2;
 extern ADC_HandleTypeDef hadc1;
+
+uint32_t point_CA;
 
 _Bool measureCA;
 
