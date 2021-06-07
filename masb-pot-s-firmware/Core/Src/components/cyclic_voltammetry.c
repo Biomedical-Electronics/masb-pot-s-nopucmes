@@ -60,9 +60,12 @@ void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 
 			vcell = (roundf(vcell * 100) / 100);       // Da problemas si no redondeamos vcell porque no entra en el bucle
 
-			if (sign * (vcell - vobj) >= 0 ) { // Aquí simplemente comprobamos si se ha llegado ya al potencial objetivo o no
-				// mientras vcell sea menor que vobj de subida la resta será negativa, multiplicada por un positivo porqué estaremos sumando
-				// en caso contrario que estemos de bajada (vobj<vcell), hasta que vcell no supere vobj en valor absoluto, al estar multiplicado por un negativo, no entraremos en la condición
+			/*
+			 * mientras vcell sea menor que vobj de subida la resta será negativa, multiplicada por un positivo porqué estaremos sumando
+			 * en caso contrario que estemos de bajada (vobj<vcell), hasta que vcell no supere vobj en valor absoluto, al estar
+			 * multiplicado por un negativo, no entraremos en la condición
+			 */
+			if (sign * (vcell - vobj) >= 0 ) {
 
 				vcell = vobj; // en caso que hayamos entrado, definimos vcell como vobj para tomar la medida en el punto objetivo exacto
 				__NOP();
@@ -70,27 +73,32 @@ void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 				if (vobj==cvConfiguration.eVertex1){   // si el objetivo es el vértice 1, definimos como nuevo objetivo el Vértice 2
 					vobj=cvConfiguration.eVertex2;
 
-					eStep = -eStep; // canviamos de signo la suma eStep: si sumábamos, pasamos a restar (eVertex2 < eVertex1), y si restábamos pasamos a sumar (eVertex2 > eVertex1)
-					sign = -sign; // canviamos también el signo del pendiente
+					eStep = -eStep;  // cambiamos de signo la suma eStep: si sumábamos, pasamos a restar (eVertex2 < eVertex1), y si restábamos pasamos a sumar (eVertex2 > eVertex1)
+					sign = -sign;    // cambiamos también el signo de la pendiente
 
 					__NOP();
 
 				}
 
-				else{                                  // si el objetivo no es el vértice 1...
+				else{   // si el objetivo no es el vértice 1...
 
-					if (vobj==cvConfiguration.eVertex2){ // o es el vértice 2
-						vobj=cvConfiguration.eBegin; // con lo que definiríamos el nuevo vobj como el eBegin
+					if (vobj==cvConfiguration.eVertex2){   // o es el vértice 2
+						vobj=cvConfiguration.eBegin;       // con lo que definiríamos el nuevo vobj como el eBegin
 						
-						eStep = -eStep; // y cambiariamos novamente de signo la suma de eStep i el valor del signo
+						eStep = -eStep;                    // y cambiaremos nuevamente de signo la suma de eStep y el valor del signo
 						sign = -sign;
 
 						__NOP();
 					}
 
-					else { // o es el eBegin, hecho que indicaria que se ha completado un ciclo
-						vobj=cvConfiguration.eVertex1; // indicamos como nuevo vobj el potencial del vértice 1 (si se quiere más de 1 ciclo)
-						cycles += 1;  // o le añadimos 1 a la variable cycles, haciendo que en la próxima iteracion no entre al contador 
+					else {                              // o es el eBegin, hecho que indicaria que se ha completado un ciclo
+						vobj=cvConfiguration.eVertex1;  // indicamos como nuevo vobj el potencial del vértice 1
+						cycles += 1;                    // o le añadimos 1 a la variable cycles
+						/*
+						 * De esta manera, en caso de que no haya llegado al número de ciclos totales sumaremos 1 y
+						 * iremos al vértice 1. En cambio, si al sumar uno al número de ciclos, saldremos del bucle
+						 * while y no haremos más mediciones.
+						 */
 						// (num of cycles == cvConfiguration.cycles) y salga del loop
 
 					__NOP();
@@ -104,7 +112,7 @@ void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 
 			}
 
-			else{ // si el potencial vcell no ha llegado al objetivo
+			else{      // si el potencial vcell no ha llegado al objetivo
 
 				vcell = vcell + eStep;                  // aplicamos un incremento/decremento al potencial vcell (arriba definimos eStep como positivo o negativo segun el contexto)
 
@@ -119,12 +127,12 @@ void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 		/*
 		 * Una vez hecho el incremento de vcell+eStep igualamos la variable measureCV a FALSE para evitar
 		 * que entre en el bucle de nuevo. Esta variable solo volverá a ser TRUE (y por tanto entraremos
-		 * en el bucle) si se activa la función callback del timer
+		 * en el bucle) si se activa la función callback del timer.
 		 */
 
 		measureCV=FALSE;
 
-		HAL_ADC_Start(&hadc1);       // iniciamos la conversion ADC
+		HAL_ADC_Start(&hadc1);                    // iniciamos la conversion ADC
 
 		HAL_ADC_PollForConversion(&hadc1, 200);   // esperamos 200 ms que finalice la conversion
 
@@ -132,7 +140,7 @@ void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 
 		double vcell = (1.65- ((double)measurement1)*3.3/(1023.0))*2.0;    // transformamos el valor en ADC a Vcell
 
-		HAL_ADC_Start(&hadc1);       // iniciamos de nuevo la conversion ADC
+		HAL_ADC_Start(&hadc1);                    // iniciamos de nuevo la conversion ADC
 
 		HAL_ADC_PollForConversion(&hadc1, 200);   // esperamos 200 ms que finalice la conversion
 
@@ -140,9 +148,9 @@ void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 
 		double icell=(((((double)measurement2)*3.3/(1023.0))-1.65)*2.0)/10000.0;  // transformamos el valor en ADC a Icell
 
-		counter = counter + ts*1000;    // variable counter que nos llevará la cuenta de los Ms
+		counter = counter + ts*1000;              // variable counter que nos llevará la cuenta de los Ms
 
-		data.point=point_CV;   // Punto que estamos enviando
+		data.point=point_CV;   // Punto de la medición que estamos enviando
 		data.timeMs=counter;   // Ms que llevamos desde el inicio de la conversión
 		data.voltage=vcell;    // Vcell obtenido
 		data.current=icell;    // Icell obtenido

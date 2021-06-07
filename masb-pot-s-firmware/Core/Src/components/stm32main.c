@@ -18,6 +18,10 @@ struct Data_S data;
 AD5280_Handle_T hpot = NULL;
 MCP4725_Handle_T hdac = NULL;
 
+/*
+ * Variable estado nos definirá el modo (CA o CV) dentro del ISR del timer
+ */
+
 uint16_t estado = IDLE;
 
 void setup(struct Handles_S *handles) {       // Esta parte se ejecutara una vez
@@ -57,10 +61,6 @@ void setup(struct Handles_S *handles) {       // Esta parte se ejecutara una vez
 	MCP4725_ConfigSlaveAddress(hdac, 0x66);
 	MCP4725_ConfigVoltageReference(hdac, 4.0f);
 	MCP4725_ConfigWriteFunction(hdac, I2C_Write);
-
-	/*
-	 * Variable estado nos definirá el modo (CA o CV) dentro del ISR del timer
-	 */
 
 }
 
