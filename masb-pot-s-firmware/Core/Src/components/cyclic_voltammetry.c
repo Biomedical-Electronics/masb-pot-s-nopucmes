@@ -33,6 +33,36 @@ void Voltammetry_Config(struct CV_Configuration_S cvConfiguration){
 
 void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 
+	// Configuracion del primer punto a tiempo 0 previo a activar el timer:
+
+	HAL_ADC_Start(&hadc1);                    // iniciamos la conversion
+	HAL_ADC_PollForConversion(&hadc1, 200);   // esperamos que finalice la conversion
+
+	uint32_t measurement1 = HAL_ADC_GetValue(&hadc1);              // Obtenemos primer valor adc
+
+	double vcell=(1.65- ((double)measurement1)*3.3/(1023.0))*2.0;  // Obtenemos el valor de Vcell
+
+	HAL_ADC_Start(&hadc1);                     // iniciamos la conversion
+	HAL_ADC_PollForConversion(&hadc1, 200);   // esperamos que finalice la conversion
+
+	uint32_t measurement2 = HAL_ADC_GetValue(&hadc1);                         //obtenemos segundo valor adc
+
+	double icell=(((((double)measurement2)*3.3/(1023.0))-1.65)*2.0)/10000.0;  // Obtenemos el valor de Icell (todo dividido entre rtia)
+
+	/*
+	 * Enviamos el primer punto (1) que corresponderá a tiempo 0 y que tendrá
+	 * los valores de Vcell y Icell calculados previamente
+	 */
+
+	data.point=0;
+	data.timeMs=0;
+	data.voltage=vcell;
+	data.current=icell;
+
+	MASB_COMM_S_sendData(data);        // Enviamos los datos
+
+	// Despues de enviar este punto activamos el timer
+
 	__HAL_TIM_CLEAR_IT(&htim2, TIM_IT_UPDATE);  
 
 	HAL_TIM_Base_Start_IT(&htim2);    // Iniciamos el timer
@@ -43,7 +73,7 @@ void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 
 	ts = cvConfiguration.eStep/cvConfiguration.scanRate; // el sampling period viene definido como el cuociente ente estos dos inputs
 
-	double vcell = cvConfiguration.eBegin; // igualamos el potencial de celda al introducido como input en eBegin
+	vcell = cvConfiguration.eBegin; // igualamos el potencial de celda al introducido como input en eBegin
 
 	// con esta variable controlamos el signo de la suma de eStep partiendo del inicio, si el objetivo es mayor que el inicial sumamos, al contrario, restamos.
 	double eStep = (cvConfiguration.eBegin < cvConfiguration.eVertex1) ? cvConfiguration.eStep : -cvConfiguration.eStep; 
