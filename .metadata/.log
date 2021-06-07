@@ -7983,3 +7983,25 @@ Reason: (1) Failed to connect to device. Please check power and cabling to targe
 !SUBENTRY 2 com.st.stm32cube.ide.mcu.debug.stlink 4 0 2021-06-07 17:46:10.149
 !MESSAGE Error in initializing ST-LINK device.
 Reason: (1) Failed to connect to device. Please check power and cabling to target.
+!SESSION 2021-06-07 18:15:47.360 -----------------------------------------------
+eclipse.buildId=Version 1.5.1
+java.version=1.8.0_272
+java.vendor=AdoptOpenJDK
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=es_ES
+Framework arguments:  E:\0_EBM\cuarto\2020-21\2 sem\microcontroladores (MASB)\practicas\0 PROYECTO\0 GITHUB\masb-pot-s-nopucmes\masb-pot-s-firmware\.project
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 E:\0_EBM\cuarto\2020-21\2 sem\microcontroladores (MASB)\practicas\0 PROYECTO\0 GITHUB\masb-pot-s-nopucmes\masb-pot-s-firmware\.project
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2021-06-07 18:16:29.550
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2021-06-07 18:16:29.774
+!MESSAGE Log4j initialized with config file E:\0_EBM\cuarto\2020-21\2 sem\microcontroladores (MASB)\practicas\0 PROYECTO\0 GITHUB\masb-pot-s-nopucmes\.metadata\.log4j.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2021-06-07 18:16:41.978
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 4 4 2021-06-07 18:16:43.299
+!MESSAGE com.st.stm32cube.ide.mcu.ide/META-INF/version/build_ref file not found, build reference will not be reported into properties
+
+!ENTRY org.eclipse.cdt.core 1 0 2021-06-07 18:16:46.941
+!MESSAGE Indexed 'masb-pot-s-firmware' (35 sources, 117 headers) in 4,04 sec: 10.387 declarations; 54.223 references; 2 unresolved inclusions; 42 syntax errors; 147 unresolved names (0,23 %)

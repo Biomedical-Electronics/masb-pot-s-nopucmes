@@ -41,15 +41,15 @@ void Chronoamperometry_Value(struct CA_Configuration_S caConfiguration){
 
 	uint32_t measurementTimeMs = caConfiguration.measurementTime * 1000;  // Tiempo TOTAL de la medicion
 
-	HAL_ADC_Start(&hadc1);                    // iniciamos la conversion
-	HAL_ADC_PollForConversion(&hadc1, 200);   // esperamos que finalice la conversion
+	HAL_ADC_Start(&hadc1);                     // iniciamos la conversion
+	HAL_ADC_PollForConversion(&hadc1, 200);    // esperamos que finalice la conversion
 
 	uint32_t measurement1 = HAL_ADC_GetValue(&hadc1);              // Obtenemos primer valor adc
 
 	double vcell=(1.65- ((double)measurement1)*3.3/(1023.0))*2.0;  // Obtenemos el valor de Vcell
 
 	HAL_ADC_Start(&hadc1);                     // iniciamos la conversion
-	HAL_ADC_PollForConversion(&hadc1, 200);   // esperamos que finalice la conversion
+	HAL_ADC_PollForConversion(&hadc1, 200);    // esperamos que finalice la conversion
 
 	uint32_t measurement2 = HAL_ADC_GetValue(&hadc1);                         //obtenemos segundo valor adc
 

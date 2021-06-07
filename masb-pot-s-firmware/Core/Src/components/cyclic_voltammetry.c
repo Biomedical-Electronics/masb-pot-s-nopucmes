@@ -35,22 +35,22 @@ void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 
 	// Configuracion del primer punto a tiempo 0 previo a activar el timer:
 
-	HAL_ADC_Start(&hadc1);                    // iniciamos la conversion
-	HAL_ADC_PollForConversion(&hadc1, 200);   // esperamos que finalice la conversion
+	HAL_ADC_Start(&hadc1);                     // iniciamos la conversion
+	HAL_ADC_PollForConversion(&hadc1, 200);    // esperamos que finalice la conversion
 
 	uint32_t measurement1 = HAL_ADC_GetValue(&hadc1);              // Obtenemos primer valor adc
 
 	double vcell=(1.65- ((double)measurement1)*3.3/(1023.0))*2.0;  // Obtenemos el valor de Vcell
 
 	HAL_ADC_Start(&hadc1);                     // iniciamos la conversion
-	HAL_ADC_PollForConversion(&hadc1, 200);   // esperamos que finalice la conversion
+	HAL_ADC_PollForConversion(&hadc1, 200);    // esperamos que finalice la conversion
 
 	uint32_t measurement2 = HAL_ADC_GetValue(&hadc1);                         //obtenemos segundo valor adc
 
 	double icell=(((((double)measurement2)*3.3/(1023.0))-1.65)*2.0)/10000.0;  // Obtenemos el valor de Icell (todo dividido entre rtia)
 
 	/*
-	 * Enviamos el primer punto (1) que corresponderá a tiempo 0 y que tendrá
+	 * Enviamos el primer punto (0) que corresponderá a tiempo 0 y que tendrá
 	 * los valores de Vcell y Icell calculados previamente
 	 */
 
@@ -61,7 +61,8 @@ void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 
 	MASB_COMM_S_sendData(data);        // Enviamos los datos
 
-	// Despues de enviar este punto activamos el timer
+
+	// Despues de enviar este punto activamos el timer y empezamos el resto de mediciones:
 
 	__HAL_TIM_CLEAR_IT(&htim2, TIM_IT_UPDATE);  
 
@@ -75,18 +76,18 @@ void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 
 	vcell = cvConfiguration.eBegin; // igualamos el potencial de celda al introducido como input en eBegin
 
-	// con esta variable controlamos el signo de la suma de eStep partiendo del inicio, si el objetivo es mayor que el inicial sumamos, al contrario, restamos.
+	// Con esta variable controlamos el signo de la suma de eStep partiendo del inicio, si el objetivo es mayor que el inicial sumamos, al contrario, restamos.
 	double eStep = (cvConfiguration.eBegin < cvConfiguration.eVertex1) ? cvConfiguration.eStep : -cvConfiguration.eStep; 
 
-	// con esta guardamos el signo, si el objetivo es mayor que el inicial positivo, a la inversa, negativo
+	// Con esta guardamos el signo, si el objetivo es mayor que el inicial positivo, a la inversa, negativo
 	double sign = (cvConfiguration.eBegin < cvConfiguration.eVertex1) ? 1 : -1;
 
 	double vobj = cvConfiguration.eVertex1;       // Igualamos vObjetivo a eVertex1
 
 
-	while(cycles < cvConfiguration.cycles){ // mientras el numero de ciclos sea menor que el introducido como input por el usuario
+	while(cycles < cvConfiguration.cycles){   // mientras el numero de ciclos sea menor que el introducido como input por el usuario
 
-		if (measureCV==TRUE){ // si se ha activado el callback del timer, y por lo tanto, se ha llevado a cabo una medida, entraremos en este condicional
+		if (measureCV==TRUE){    // si se ha activado el callback del timer, y por lo tanto, se ha llevado a cabo una medida, entraremos en este condicional
 
 			vcell = (roundf(vcell * 100) / 100);       // Da problemas si no redondeamos vcell porque no entra en el bucle
 
@@ -95,6 +96,7 @@ void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 			 * en caso contrario que estemos de bajada (vobj<vcell), hasta que vcell no supere vobj en valor absoluto, al estar
 			 * multiplicado por un negativo, no entraremos en la condición
 			 */
+
 			if (sign * (vcell - vobj) >= 0 ) {
 
 				vcell = vobj; // en caso que hayamos entrado, definimos vcell como vobj para tomar la medida en el punto objetivo exacto
@@ -124,11 +126,13 @@ void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 					else {                              // o es el eBegin, hecho que indicaria que se ha completado un ciclo
 						vobj=cvConfiguration.eVertex1;  // indicamos como nuevo vobj el potencial del vértice 1
 						cycles += 1;                    // o le añadimos 1 a la variable cycles
+
 						/*
 						 * De esta manera, en caso de que no haya llegado al número de ciclos totales sumaremos 1 y
 						 * iremos al vértice 1. En cambio, si al sumar uno al número de ciclos, saldremos del bucle
 						 * while y no haremos más mediciones.
 						 */
+
 						// (num of cycles == cvConfiguration.cycles) y salga del loop
 
 					__NOP();
@@ -185,9 +189,9 @@ void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 		data.voltage=vcell;    // Vcell obtenido
 		data.current=icell;    // Icell obtenido
 
-		MASB_COMM_S_sendData(data);
+		MASB_COMM_S_sendData(data); // Enviamos los datos
 
-		point_CV++;           // Sumamos uno al contador de puntos
+		point_CV++;            // Sumamos uno al contador de puntos
 
 		}
 
