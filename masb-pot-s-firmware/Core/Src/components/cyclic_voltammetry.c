@@ -34,32 +34,35 @@ void Voltammetry_Config(struct CV_Configuration_S cvConfiguration){
 void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 
 	// Configuracion del primer punto a tiempo 0 previo a activar el timer:
+	// Realizamos las mediciones de Vcell_real y Icell
 
 	HAL_ADC_Start(&hadc1);                     // iniciamos la conversion
 	HAL_ADC_PollForConversion(&hadc1, 200);    // esperamos que finalice la conversion
 
 	uint32_t measurement1 = HAL_ADC_GetValue(&hadc1);              // Obtenemos primer valor adc
 
-	double vcell=(1.65- ((double)measurement1)*3.3/(1023.0))*2.0;  // Obtenemos el valor de Vcell
+	double vcell_real = (1.65- ((double)measurement1)*3.3/(1023.0))*2.0;  // Obtenemos el valor de Vcell
 
 	HAL_ADC_Start(&hadc1);                     // iniciamos la conversion
 	HAL_ADC_PollForConversion(&hadc1, 200);    // esperamos que finalice la conversion
 
 	uint32_t measurement2 = HAL_ADC_GetValue(&hadc1);                         //obtenemos segundo valor adc
 
-	double icell=(((((double)measurement2)*3.3/(1023.0))-1.65)*2.0)/10000.0;  // Obtenemos el valor de Icell (todo dividido entre rtia)
+	double icell = (((((double)measurement2)*3.3/(1023.0))-1.65)*2.0)/10000.0;  // Obtenemos el valor de Icell (todo dividido entre rtia)
 
 	/*
 	 * Enviamos el primer punto (0) que corresponderá a tiempo 0 y que tendrá
 	 * los valores de Vcell y Icell calculados previamente
 	 */
 
-	data.point=0;
+	data.point=point_CV;
 	data.timeMs=0;
-	data.voltage=vcell;
+	data.voltage=vcell_real;
 	data.current=icell;
 
 	MASB_COMM_S_sendData(data);        // Enviamos los datos
+
+	point_CV++;                        // Vamos al punto 2 de CV
 
 
 	// Despues de enviar este punto activamos el timer y empezamos el resto de mediciones:
@@ -74,7 +77,7 @@ void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 
 	ts = cvConfiguration.eStep/cvConfiguration.scanRate; // el sampling period viene definido como el cuociente ente estos dos inputs
 
-	vcell = cvConfiguration.eBegin; // igualamos el potencial de celda al introducido como input en eBegin
+	double vcell = cvConfiguration.eBegin; // igualamos el potencial de celda al introducido como input en eBegin
 
 	// Con esta variable controlamos el signo de la suma de eStep partiendo del inicio, si el objetivo es mayor que el inicial sumamos, al contrario, restamos.
 	double eStep = (cvConfiguration.eBegin < cvConfiguration.eVertex1) ? cvConfiguration.eStep : -cvConfiguration.eStep; 
@@ -127,6 +130,10 @@ void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 						vobj=cvConfiguration.eVertex1;  // indicamos como nuevo vobj el potencial del vértice 1
 						cycles += 1;                    // o le añadimos 1 a la variable cycles
 
+						if (cycles == cvConfiguration.cycles){
+							break;
+						}
+
 						/*
 						 * De esta manera, en caso de que no haya llegado al número de ciclos totales sumaremos 1 y
 						 * iremos al vértice 1. En cambio, si al sumar uno al número de ciclos, saldremos del bucle
@@ -146,7 +153,15 @@ void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 
 			}
 
-			else{      // si el potencial vcell no ha llegado al objetivo
+			else {      // si el potencial vcell no ha llegado al objetivo
+
+				if (sign * ((vcell+eStep) - vobj) >= 0 ) {
+
+					vcell = vobj;
+
+					__NOP();
+
+				} else{
 
 				vcell = vcell + eStep;                  // aplicamos un incremento/decremento al potencial vcell (arriba definimos eStep como positivo o negativo segun el contexto)
 
@@ -155,6 +170,7 @@ void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 				MCP4725_SetOutputVoltage(hdac, vdac);   // administrem el nou voltatge al Working Electrode
 
 				__NOP();
+				}
 
 			}
 
@@ -166,13 +182,15 @@ void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 
 		measureCV=FALSE;
 
+		// Realizamos las mediciones de Vcell_real y Icell
+
 		HAL_ADC_Start(&hadc1);                    // iniciamos la conversion ADC
 
 		HAL_ADC_PollForConversion(&hadc1, 200);   // esperamos 200 ms que finalice la conversion
 
 		uint32_t measurement1 = HAL_ADC_GetValue(&hadc1);  // obtenemos el primer valor ADC
 
-		double vcell = (1.65- ((double)measurement1)*3.3/(1023.0))*2.0;    // transformamos el valor en ADC a Vcell
+		vcell_real = (1.65- ((double)measurement1)*3.3/(1023.0))*2.0;    // transformamos el valor en ADC a Vcell
 
 		HAL_ADC_Start(&hadc1);                    // iniciamos de nuevo la conversion ADC
 
@@ -180,13 +198,13 @@ void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 
 		uint32_t measurement2 = HAL_ADC_GetValue(&hadc1);  // obtenemos el primer valor ADC
 
-		double icell=(((((double)measurement2)*3.3/(1023.0))-1.65)*2.0)/10000.0;  // transformamos el valor en ADC a Icell
+		icell = (((((double)measurement2)*3.3/(1023.0))-1.65)*2.0)/10000.0;  // transformamos el valor en ADC a Icell
 
 		counter = counter + ts*1000;              // variable counter que nos llevará la cuenta de los Ms
 
 		data.point=point_CV;   // Punto de la medición que estamos enviando
 		data.timeMs=counter;   // Ms que llevamos desde el inicio de la conversión
-		data.voltage=vcell;    // Vcell obtenido
+		data.voltage=vcell_real;    // Vcell obtenido
 		data.current=icell;    // Icell obtenido
 
 		MASB_COMM_S_sendData(data); // Enviamos los datos

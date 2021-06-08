@@ -86,7 +86,7 @@ void Chronoamperometry_Value(struct CA_Configuration_S caConfiguration){
 
 			measurement1 = HAL_ADC_GetValue(&hadc1);  //obtenemos primer valor adc
 
-			vcell=(1.65- ((double)measurement1)*3.3/(1023.0))*2.0;             // Obtenemos el valor de Vcell
+			vcell=(1.65 - ((double)measurement1)*3.3/(1023.0))*2.0;             // Obtenemos el valor de Vcell
 
 			HAL_ADC_Start(&hadc1); // iniciamos la conversion
 			HAL_ADC_PollForConversion(&hadc1, 200);   // esperamos que finalice la conversion
