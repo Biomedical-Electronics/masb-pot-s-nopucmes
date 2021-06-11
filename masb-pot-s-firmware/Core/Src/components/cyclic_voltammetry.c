@@ -11,7 +11,9 @@
 
 #include "components/stm32main.h"          // Para utilizar el setup()
 
-#include "math.h"                          //Para utilizar roundf‍
+#include "math.h"                          //Para utilizar roundf
+
+#include "components/formulas.h"‍
 
 double ts = 0;
 
@@ -19,12 +21,12 @@ uint32_t point_CV = 1;    // variable punto para la voltametria ciclica
 
 void Voltammetry_Config(struct CV_Configuration_S cvConfiguration){
 
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, 1);   // Cerramos rele (EN - HIGH (1))
 
-	float vdac = (float)(1.65-(cvConfiguration.eBegin/2.0));   // Calculamos el valor de vdac en función de eBegin
+
+	float vdac = calculateDacOutputVoltage(cvConfiguration.eBegin);   // Calculamos el valor de vdac en función de eBegin
 
 	MCP4725_SetOutputVoltage(hdac, vdac);      // Fijamos el valor de Vcell a eBegin
-
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, 1);   // Cerramos rele (EN - HIGH (1))
 	estado = CV;    // Definimos la variable estado como CV (utilizamos esta variable en el timer)
 
 	__HAL_TIM_SET_AUTORELOAD(&htim2, (cvConfiguration.eStep/cvConfiguration.scanRate*1000)*84000); // sampling period defined by eStep/scanRate
@@ -41,14 +43,14 @@ void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 
 	uint32_t measurement1 = HAL_ADC_GetValue(&hadc1);              // Obtenemos primer valor adc
 
-	double vcell_real = (1.65- ((double)measurement1)*3.3/(1023.0))*2.0;  // Obtenemos el valor de Vcell
+	double vcell_real = calculateVrefVoltage(measurement1);  // Obtenemos el valor de Vcell
 
 	HAL_ADC_Start(&hadc1);                     // iniciamos la conversion
 	HAL_ADC_PollForConversion(&hadc1, 200);    // esperamos que finalice la conversion
 
 	uint32_t measurement2 = HAL_ADC_GetValue(&hadc1);                         //obtenemos segundo valor adc
 
-	double icell = (((((double)measurement2)*3.3/(1023.0))-1.65)*2.0)/10000.0;  // Obtenemos el valor de Icell (todo dividido entre rtia)
+	double icell = calculateIcellCurrent(measurement2);  // Obtenemos el valor de Icell (todo dividido entre rtia)
 
 	/*
 	 * Enviamos el primer punto (0) que corresponderá a tiempo 0 y que tendrá
@@ -75,7 +77,7 @@ void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 
 	measureCV = FALSE;   // Con esta variable controlaremos cada vez que se active el callback del timer para hacer una medida
 
-	ts = cvConfiguration.eStep/cvConfiguration.scanRate; // el sampling period viene definido como el cuociente ente estos dos inputs
+	ts = cvConfiguration.eStep/cvConfiguration.scanRate*1000; // el sampling period viene definido como el cuociente ente estos dos inputs
 
 	double vcell = cvConfiguration.eBegin; // igualamos el potencial de celda al introducido como input en eBegin
 
@@ -92,7 +94,7 @@ void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 
 		if (measureCV==TRUE){    // si se ha activado el callback del timer, y por lo tanto, se ha llevado a cabo una medida, entraremos en este condicional
 
-			vcell = (roundf(vcell * 100) / 100);       // Da problemas si no redondeamos vcell porque no entra en el bucle
+			//vcell = (roundf(vcell * 100) / 100);       // Da problemas si no redondeamos vcell porque no entra en el bucle
 
 			/*
 			 * mientras vcell sea menor que vobj de subida la resta será negativa, multiplicada por un positivo porqué estaremos sumando
@@ -130,9 +132,9 @@ void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 						vobj=cvConfiguration.eVertex1;  // indicamos como nuevo vobj el potencial del vértice 1
 						cycles += 1;                    // o le añadimos 1 a la variable cycles
 
-						if (cycles == cvConfiguration.cycles){
-							break;
-						}
+//						if (cycles == cvConfiguration.cycles){
+//							break;
+//						}
 
 						/*
 						 * De esta manera, en caso de que no haya llegado al número de ciclos totales sumaremos 1 y
@@ -165,7 +167,7 @@ void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 
 				vcell = vcell + eStep;                  // aplicamos un incremento/decremento al potencial vcell (arriba definimos eStep como positivo o negativo segun el contexto)
 
-				float vdac = (float)(1.65-(vcell/2.0)); // definim el vdac a partir del Vcell que volem donar
+				float vdac = calculateDacOutputVoltage(vcell); // definim el vdac a partir del Vcell que volem donar
 
 				MCP4725_SetOutputVoltage(hdac, vdac);   // administrem el nou voltatge al Working Electrode
 
@@ -190,7 +192,7 @@ void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 
 		uint32_t measurement1 = HAL_ADC_GetValue(&hadc1);  // obtenemos el primer valor ADC
 
-		vcell_real = (1.65- ((double)measurement1)*3.3/(1023.0))*2.0;    // transformamos el valor en ADC a Vcell
+		vcell_real = calculateVrefVoltage(measurement1);    // transformamos el valor en ADC a Vcell
 
 		HAL_ADC_Start(&hadc1);                    // iniciamos de nuevo la conversion ADC
 
@@ -198,9 +200,9 @@ void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 
 		uint32_t measurement2 = HAL_ADC_GetValue(&hadc1);  // obtenemos el primer valor ADC
 
-		icell = (((((double)measurement2)*3.3/(1023.0))-1.65)*2.0)/10000.0;  // transformamos el valor en ADC a Icell
+		icell = calculateIcellCurrent(measurement2);  // transformamos el valor en ADC a Icell
 
-		counter = counter + ts*1000;              // variable counter que nos llevará la cuenta de los Ms
+		counter = counter + ts;              // variable counter que nos llevará la cuenta de los Ms
 
 		data.point=point_CV;   // Punto de la medición que estamos enviando
 		data.timeMs=counter;   // Ms que llevamos desde el inicio de la conversión

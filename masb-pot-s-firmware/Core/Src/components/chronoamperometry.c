@@ -11,13 +11,15 @@
 
 #include "components/stm32main.h"           // Para utilizar el setup()
 
+#include "components/formulas.h"
+
 uint32_t point_CA = 1;    // Variable punto para la cronoamperometria
 
 void Chronoamperometry_Config(struct CA_Configuration_S caConfiguration){
 
 	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, 1);                // Cerramos rele (EN - HIGH (1))
 
-	float vdac = (float)(1.65-(caConfiguration.eDC/2.0));   // Formula 1
+	float vdac = calculateDacOutputVoltage(caConfiguration.eDC);   // Formula 1
 
 	MCP4725_SetOutputVoltage(hdac, vdac);   // Fijamos el valor de Vcell como eDC
 
@@ -46,14 +48,14 @@ void Chronoamperometry_Value(struct CA_Configuration_S caConfiguration){
 
 	uint32_t measurement1 = HAL_ADC_GetValue(&hadc1);              // Obtenemos primer valor adc
 
-	double vcell=(1.65- ((double)measurement1)*3.3/(1023.0))*2.0;  // Obtenemos el valor de Vcell
+	double vcell = calculateVrefVoltage(measurement1);  // Obtenemos el valor de Vcell
 
 	HAL_ADC_Start(&hadc1);                     // iniciamos la conversion
 	HAL_ADC_PollForConversion(&hadc1, 200);    // esperamos que finalice la conversion
 
 	uint32_t measurement2 = HAL_ADC_GetValue(&hadc1);                         //obtenemos segundo valor adc
 
-	double icell=(((((double)measurement2)*3.3/(1023.0))-1.65)*2.0)/10000.0;  // Obtenemos el valor de Icell (todo dividido entre rtia)
+	double icell = calculateIcellCurrent(measurement2);  // Obtenemos el valor de Icell (todo dividido entre rtia)
 
 	/*
 	 * Enviamos el primer punto (1) que corresponderá a tiempo 0 y que tendrá
@@ -86,14 +88,14 @@ void Chronoamperometry_Value(struct CA_Configuration_S caConfiguration){
 
 			measurement1 = HAL_ADC_GetValue(&hadc1);  //obtenemos primer valor adc
 
-			vcell=(1.65 - ((double)measurement1)*3.3/(1023.0))*2.0;             // Obtenemos el valor de Vcell
+			vcell = calculateVrefVoltage(measurement1);             // Obtenemos el valor de Vcell
 
 			HAL_ADC_Start(&hadc1); // iniciamos la conversion
 			HAL_ADC_PollForConversion(&hadc1, 200);   // esperamos que finalice la conversion
 
 			measurement2 = HAL_ADC_GetValue(&hadc1);  //obtenemos segundo valor adc
 
-			icell=(((((double)measurement2)*3.3/(1023.0))-1.65)*2.0)/10000.0;  // Obtenemos el valor de Icell (todo dividido entre rtia)
+			icell = calculateIcellCurrent(measurement2);  // Obtenemos el valor de Icell (todo dividido entre rtia)
 
 			caConfiguration = MASB_COMM_S_getCaConfiguration();
 

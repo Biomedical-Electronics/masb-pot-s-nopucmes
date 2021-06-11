@@ -1,6 +1,6 @@
 
 # Project stuff
-.metadata
+.metadata/
 
 *.launch
 .settings/

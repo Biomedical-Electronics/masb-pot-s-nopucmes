@@ -28,12 +28,14 @@ void setup(struct Handles_S *handles) {       // Esta parte se ejecutara una vez
 
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 1);  // Habilitamos la PMU (1 = PMU habilitada)
 
+	HAL_Delay(500);
+
 	MASB_COMM_S_setUart(handles->huart);
 
 	MASB_COMM_S_waitForMessage();
 
 	//================================== I2C =======================================
-	I2C_Init(&hi2c1);
+	I2C_init(&hi2c1);
 
 	//=========================== Potenciometro ====================================
 	// Creamos el handle de la libreria.
@@ -45,10 +47,10 @@ void setup(struct Handles_S *handles) {       // Esta parte se ejecutara una vez
 	// I2C_Write de la libreria i2c_lib.
 	AD5280_ConfigSlaveAddress(hpot, 0x2C);
 	AD5280_ConfigNominalResistorValue(hpot, 50e3f);
-	AD5280_ConfigWriteFunction(hpot, I2C_Write);
+	AD5280_ConfigWriteFunction(hpot, I2C_write);
 
-	// Fijamos la resistencia de, por ejemplo, 12kohms.
-	AD5280_SetWBResistance(hpot, 12e3f);
+	// Fijamos la resistencia de, por ejemplo, 50kohms.
+	AD5280_SetWBResistance(hpot, 50e3f);
 
 	//================================== DAC =======================================
 	// Creamos el handle de la libreria.
@@ -60,7 +62,7 @@ void setup(struct Handles_S *handles) {       // Esta parte se ejecutara una vez
 	// i2c_lib.
 	MCP4725_ConfigSlaveAddress(hdac, 0x66);
 	MCP4725_ConfigVoltageReference(hdac, 4.0f);
-	MCP4725_ConfigWriteFunction(hdac, I2C_Write);
+	MCP4725_ConfigWriteFunction(hdac, I2C_write);
 
 }
 
