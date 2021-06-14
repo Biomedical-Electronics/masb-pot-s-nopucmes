@@ -21,12 +21,12 @@ uint32_t point_CV = 1;    // variable punto para la voltametria ciclica
 
 void Voltammetry_Config(struct CV_Configuration_S cvConfiguration){
 
-
-
 	float vdac = calculateDacOutputVoltage(cvConfiguration.eBegin);   // Calculamos el valor de vdac en función de eBegin
 
 	MCP4725_SetOutputVoltage(hdac, vdac);      // Fijamos el valor de Vcell a eBegin
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, 1);   // Cerramos rele (EN - HIGH (1))
+
+	HAL_GPIO_WritePin(RELAY_GPIO_Port, RELAY_Pin, 1);                // Cerramos rele (EN - HIGH (1))
+
 	estado = CV;    // Definimos la variable estado como CV (utilizamos esta variable en el timer)
 
 	__HAL_TIM_SET_AUTORELOAD(&htim2, (cvConfiguration.eStep/cvConfiguration.scanRate*1000)*84000); // sampling period defined by eStep/scanRate
@@ -217,13 +217,13 @@ void Voltammetry_Value(struct CV_Configuration_S cvConfiguration){
 
 	}
 
-	HAL_TIM_Base_Stop_IT(&htim2);             // Detenemos el timer al finalizar la medición
+	HAL_TIM_Base_Stop_IT(&htim2);                      // Detenemos el timer al finalizar la medición
 
-	HAL_ADC_Stop(&hadc1);					  // Paramos la conversion ADC
+	HAL_ADC_Stop(&hadc1);					           // Paramos la conversion ADC
 
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, 0);  // Abrimos rele (EN - LOW (0))
+	HAL_GPIO_WritePin(RELAY_GPIO_Port, RELAY_Pin, 0);  // Abrimos rele (EN - LOW (0))
 
-	__HAL_TIM_SET_COUNTER(&htim2, 0);         // Reiniciamos el contador del timer a 0
+	__HAL_TIM_SET_COUNTER(&htim2, 0);                  // Reiniciamos el contador del timer a 0
 
 	// Reiniciamos variables a los valores iniciales
 	estado = IDLE;

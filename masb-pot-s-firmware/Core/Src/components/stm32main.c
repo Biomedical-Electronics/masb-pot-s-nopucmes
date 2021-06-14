@@ -26,7 +26,7 @@ uint16_t estado = IDLE;
 
 void setup(struct Handles_S *handles) {       // Esta parte se ejecutara una vez
 
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 1);  // Habilitamos la PMU (1 = PMU habilitada)
+	HAL_GPIO_WritePin(EN_GPIO_Port, EN_Pin, 1);  // Habilitamos la PMU (1 = PMU habilitada)
 
 	HAL_Delay(500);
 
@@ -82,15 +82,10 @@ void loop(void) {		// Esta parte se ejecutara de manera continuada
 				// Configuramos la Voltametria Ciclica
 				Voltammetry_Config(cvConfiguration);
 
-				__NOP();
-
 				// Obtenemos los valores de la Voltametria Ciclica
 				Voltammetry_Value(cvConfiguration);
 
 				__NOP(); // Esta instruccion no hace nada y solo sirve para poder anadir un breakpoint
-
-	 		// Aqui iria todo el codigo de gestion de la medicion que hareis en el proyecto
-	        // si no quereis implementar el comando de stop.
 
 				break;
 
@@ -103,8 +98,6 @@ void loop(void) {		// Esta parte se ejecutara de manera continuada
 				// Configuramos la Cronoamperometria
 				Chronoamperometry_Config(caConfiguration);
 
-				__NOP();
-
 				// Obtenemos los valores de la Cronoamperometria
 				Chronoamperometry_Value(caConfiguration);
 
@@ -115,8 +108,6 @@ void loop(void) {		// Esta parte se ejecutara de manera continuada
 			case STOP_MEAS:            // Si hemos recibido STOP_MEAS
 
 				__NOP(); // Esta instruccion no hace nada y solo sirve para poder anadir un breakpoint
-
-	 		// Aqui iria el codigo para tener la medicion si implementais el comando stop.
 
 				break;
 
@@ -130,8 +121,5 @@ void loop(void) {		// Esta parte se ejecutara de manera continuada
 	MASB_COMM_S_waitForMessage();
 
 	}
-
-	// Aqui es donde deberia de ir el codigo de control de las mediciones si se quiere implementar
-	// el comando de STOP.
 
 }

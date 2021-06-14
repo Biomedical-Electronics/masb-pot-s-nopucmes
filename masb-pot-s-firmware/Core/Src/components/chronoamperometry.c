@@ -17,7 +17,7 @@ uint32_t point_CA = 1;    // Variable punto para la cronoamperometria
 
 void Chronoamperometry_Config(struct CA_Configuration_S caConfiguration){
 
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, 1);                // Cerramos rele (EN - HIGH (1))
+	HAL_GPIO_WritePin(RELAY_GPIO_Port, RELAY_Pin, 1);                // Cerramos rele (EN - HIGH (1))
 
 	float vdac = calculateDacOutputVoltage(caConfiguration.eDC);   // Formula 1
 
@@ -127,13 +127,13 @@ void Chronoamperometry_Value(struct CA_Configuration_S caConfiguration){
 
 	}
 
-	HAL_TIM_Base_Stop_IT(&htim2);             // Detenemos el timer al finalizar la medición
+	HAL_TIM_Base_Stop_IT(&htim2);                      // Detenemos el timer al finalizar la medición
 
-	HAL_ADC_Stop(&hadc1);					  // Paramos la conversion ADC
+	HAL_ADC_Stop(&hadc1);					           // Paramos la conversion ADC
 
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, 0);  // Abrimos rele (EN - LOW (0))
+	HAL_GPIO_WritePin(RELAY_GPIO_Port, RELAY_Pin, 0);  // Abrimos rele (EN - LOW (0))
 
-	__HAL_TIM_SET_COUNTER(&htim2, 0);         // Reiniciamos el contador del timer a 0
+	__HAL_TIM_SET_COUNTER(&htim2, 0);                  // Reiniciamos el contador del timer a 0
 
 	// Reiniciamos variables a los valores iniciales
 
