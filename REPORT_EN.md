@@ -284,9 +284,10 @@ Sampling rate is set to 100ms, and V~CELL~ is fixed at 0.5V. The results obtaine
 
 <p align="center">
 <a href="Docs/assets/Resultados_Crono.png">
-<img src="Docs/assets/Resultados_CA_validacion.png" alt="Resultados Crono para la validación" style="zoom:50%" />
+<img src="Docs/assets/Resultados_CA_validacion.png" alt="Resultados Crono para la validación" style="zoom:40%" />
 </a>
 </p>
+
 
 - *Results using a potassium ferricyanide sample at different concentrations in a buffer solution of potassium chloride*
 
@@ -315,9 +316,10 @@ In the same way, a technical validation of cyclic voltammetry has been carried o
 
 <p align="center">
 <a href="Docs/assets/Resultados_Crono.png">
-<img src="Docs/assets/Resultados_CV_validacion.png" alt="Resultados voltametría para la validación" style="zoom:50%" />
+<img src="Docs/assets/Resultados_CV_validacion.png" alt="Resultados voltametría para la validación" style="zoom:40%" />
 </a>
 </p>
+
 
 - *Results using a potassium ferricyanide sample at different concentrations in a buffer solution of potassium chloride*
 
