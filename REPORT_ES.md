@@ -110,6 +110,7 @@ El siguiente diagrama de flujo es el que hemos realizado para la implementación
 <img src="Docs/assets/imgs/ca-flow.png" alt="Diagrama de flujo de la cronoamperometría" />
 </a>
 </p>
+
 > Diagrama de flujo de la función implementada para la cronoamperometría.
 
 ### Implementación Voltametría Cíclica
