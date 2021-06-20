@@ -99,7 +99,7 @@ Para enviar y recibir la información del microcontrolador hemos utilizado una a
 
 ### Implementación Cronoamperometría
 
-Esta técnica es la consiste en la aplicación de un voltaje durante cierto intervalo de tiempo en la celda y el registro de la corriente resultante. La implementación de esta técnica se basa en fijar la tensión de la celda electroquímica a un valor concreto y realizar las medidas de V~CELL(REAL)~ y I~CELL~ a diferentes tiempos, como podemos ver en el [diagrama de flujo](#Diagrama-de-Flujo-(CA)). Posteriormente solo se tienen que enviar los datos al *host*. Cada vez que se realiza una medición se debe enviar la siguiente información: **punto** en el que nos encontramos, **tiempo** en segundos en el que se realiza la medición y por último, el **voltaje** y la **intensidad** medidos, V~CELL(REAL)~ y I~CELL~ respectivamente.
+Esta técnica es la consiste en la aplicación de un voltaje durante cierto intervalo de tiempo en la celda y el registro de la corriente resultante. La implementación de esta técnica se basa en fijar la tensión de la celda electroquímica a un valor concreto y realizar las medidas de V<sub>CELL(REAL)</sub> y I<sub>CELL</sub> a diferentes tiempos, como podemos ver en el [diagrama de flujo](#Diagrama-de-Flujo-(CA)). Posteriormente solo se tienen que enviar los datos al *host*. Cada vez que se realiza una medición se debe enviar la siguiente información: **punto** en el que nos encontramos, **tiempo** en segundos en el que se realiza la medición y por último, el **voltaje** y la **intensidad** medidos, V<sub>CELL(REAL)</sub> y I<sub>CELL</sub> respectivamente.
 
 #### Diagrama de Flujo (CA)
 
@@ -150,7 +150,7 @@ La ecuación de Nernst nos proporciona una potente manera de predecir la respues
 
 #### Diagrama de Flujo (CV)
 
-El siguiente diagrama de flujo corresponde a la voltametría cíclica. Podemos ver como el flujo corresponde a la explicación previa del la técnica y como vamos variando `vObjetivo` a los diferentes vértices que hemos visto en la figura anterior. Cada vez que se realiza una medición, por tanto que incrementamos V~CELL~ con `eStep`, se debe enviar la siguiente información: **punto** en el que nos encontramos, **tiempo** en segundos en el que se realiza la medición y por último, el **voltaje** y la **intensidad** medidos, V~CELL(REAL)~ y I~CELL~ respectivamente. Cycles == número total de ciclos
+El siguiente diagrama de flujo corresponde a la voltametría cíclica. Podemos ver como el flujo corresponde a la explicación previa del la técnica y como vamos variando `vObjetivo` a los diferentes vértices que hemos visto en la figura anterior. Cada vez que se realiza una medición, por tanto que incrementamos V<sub>CELL</sub> con `eStep`, se debe enviar la siguiente información: **punto** en el que nos encontramos, **tiempo** en segundos en el que se realiza la medición y por último, el **voltaje** y la **intensidad** medidos, V<sub>CELL(REAL)</sub> y I<sub>CELL</sub> respectivamente. Cycles == número total de ciclos
 
 <p align="center">
 <a href="Docs/assets/CV_flux.png">
@@ -211,9 +211,9 @@ Este componente será el encargado de cerrar y abrir nuestro circuito. Funciona 
 
 #### *Potenciostato y ADC*
 
-El potenciostato es el responsable de polarizar la celda electroquímica a una tensión V~CELL~ y leer la corriente que circula por ella I~CELL~. 
+El potenciostato es el responsable de polarizar la celda electroquímica a una tensión V<sub>CELL</sub> y leer la corriente que circula por ella I<sub>CELL</sub>. 
 
-Además utilizaremos el ADC del microcontrolador para leer la tensión real que estamos aplicando y para calcular V~CELL~ y I~CELL~.
+Además utilizaremos el ADC del microcontrolador para leer la tensión real que estamos aplicando y para calcular V<sub>CELL</sub> y I<sub>CELL</sub>.
 
 ### Configuración del microcontrolador
 
@@ -242,7 +242,7 @@ En nuestro caso hemos utilizado el *timer 2* (`TIM2`) el cual tiene un contador 
 
 ### Función para la Cronoamperometría
 
-El desarrollo de la función para la cronoamperometría está basado en el diagrama de flujo anteriormente mostrado. Como ya se ha explicado anteriormente, en la cronoamperometría medimos la intensidad de corriente que pasa a través de una celda tras haberle fijado un voltaje. Como no estamos en un dispositivo perfecto e ideal, este voltaje que hemos enviado tendrá pequeñas variaciones, por tanto es importante medirlo para saber el valor real. Este voltaje se mide utilizando el ADC del microcontrolador. El valor medido se obtiene aislando V~señal~ de la siguiente fórmula.
+El desarrollo de la función para la cronoamperometría está basado en el diagrama de flujo anteriormente mostrado. Como ya se ha explicado anteriormente, en la cronoamperometría medimos la intensidad de corriente que pasa a través de una celda tras haberle fijado un voltaje. Como no estamos en un dispositivo perfecto e ideal, este voltaje que hemos enviado tendrá pequeñas variaciones, por tanto es importante medirlo para saber el valor real. Este voltaje se mide utilizando el ADC del microcontrolador. El valor medido se obtiene aislando V<sub>señal</sub> de la siguiente fórmula.
 
 <p align="center">
 <img src="https://latex.codecogs.com/gif.latex?\textup{ADC}_{\textup{valor}}=\frac{\textup{V}_{\textup{se\~{n}al}}}{\textup{V}_{\textup{ref}}}(2^{\textup{bits}}-1)" alt="Fórmula conversión ADC"/>
@@ -254,13 +254,13 @@ Nuestro microcontrolador tiene una resolución de 12 bits por lo que la fórmula
 <img src="https://latex.codecogs.com/gif.latex?\textup{V}_{\textup{se\~{n}al}}=\frac{\textup{ADC}_{\textup{valor}}{\textup{V}_{\textup{ref}}}}{(2^{\textup{bits}}-1)}" alt="Fórmula conversión V señal"/>
 </p>
 
-Con V~señal~ podemos calcular el Voltaje en la celda usando la siguiente fórmula:
+Con V<sub>señal</sub>podemos calcular el Voltaje en la celda usando la siguiente fórmula:
 
 <p align="center">
 <img src="https://render.githubusercontent.com/render/math?math=V_{CELL}=(1.65-V_{ADC})\times 2" />
 </p>
 
-> Siendo V~señal~ = V~ADC~
+> Siendo V<sub>señal</sub> = V<sub>ADC</sub>
 
 Y la intensidad de corriente viene definida por la siguiente fórmula:
 
@@ -268,23 +268,23 @@ Y la intensidad de corriente viene definida por la siguiente fórmula:
 <img src="https://render.githubusercontent.com/render/math?math=I_{CELL}=\frac{(V_{ADC}-1.65)\times 2}{R_{TIA}}" />
 </p>
 
-Sin embargo, V~ADC~ en V~CELL~ no es el mismo que V~ADC~ en I~CELL~, por lo que hay que medir dos valores distintos y usar el ADC~value~ correspondiente para cada uno. Tras esta idea general del funcionamiento de la cronoamperometría, vayamos a ver su implementación real. Para ello hemos utilizado una interrupción del timer, incluida en el archivo `timer.c`, y dos funciones que se encuentran en el archivo `chronoamperometry.c`.
+Sin embargo, V~ADC~ en V<sub>CELL</sub> no es el mismo que V~ADC~ en I<sub>CELL</sub>, por lo que hay que medir dos valores distintos y usar el ADC~value~ correspondiente para cada uno. Tras esta idea general del funcionamiento de la cronoamperometría, vayamos a ver su implementación real. Para ello hemos utilizado una interrupción del timer, incluida en el archivo `timer.c`, y dos funciones que se encuentran en el archivo `chronoamperometry.c`.
 
-En la interrupción controlamos únicamente una variable que es la encargada de iniciar la medida de la cronoamperometría. Las dos funciones son `Chronoamperometry_Config` y `Chronoamperometry_Value`. En la primera se cierra el relé, se configura el ADC, el timer, se fija el valor de V~CELL~ como eDC y se envía la petición de hacer una cronoamperometría. Por otro lado, en la segunda función se llevan a cabo todas las mediciones. Para ello es necesario, primero de todo, detectar el tiempo total de medida pedido por el usuario. A continuación, se inicia la conversión, y se mide V~CELL~ e I~CELL~. Tras ello enviamos el punto inicial, que corresponde a tiempo 0, y los valores medidos de V~CELL~ e I~CELL~; e iniciamos el timer. Tras el envío, sumamos un punto a `pointCA`, esta variable se encarga de controlar el número de puntos pedidos por el usuario. Además al enviar cada punto, y por tanto cumplir un periodo, se sumará un `samplingPeriod` a la variable `counter`.
+En la interrupción controlamos únicamente una variable que es la encargada de iniciar la medida de la cronoamperometría. Las dos funciones son `Chronoamperometry_Config` y `Chronoamperometry_Value`. En la primera se cierra el relé, se configura el ADC, el timer, se fija el valor de V<sub>CELL</sub> como eDC y se envía la petición de hacer una cronoamperometría. Por otro lado, en la segunda función se llevan a cabo todas las mediciones. Para ello es necesario, primero de todo, detectar el tiempo total de medida pedido por el usuario. A continuación, se inicia la conversión, y se mide V<sub>CELL</sub> e I<sub>CELL</sub>. Tras ello enviamos el punto inicial, que corresponde a tiempo 0, y los valores medidos de V<sub>CELL</sub> e I<sub>CELL</sub>; e iniciamos el timer. Tras el envío, sumamos un punto a `pointCA`, esta variable se encarga de controlar el número de puntos pedidos por el usuario. Además al enviar cada punto, y por tanto cumplir un periodo, se sumará un `samplingPeriod` a la variable `counter`.
 
-Para el resto de medidas es necesario hacer un bucle `while`, el cual se mantendrá activo hasta que la variable de control llamada `counter`, sea superior al tiempo total de medida configurado por el usuario. Dentro de este bucle `while` encontramos un bucle `if`, que se activa si la variable bandera es `TRUE`, esta variable únicamente es así cuando se activa la **función ISR** del timer. En él encontramos una vez más las funciones que inician la conversión, las medidas de V~CELL~ e I~CELL~ y su envío al host.
+Para el resto de medidas es necesario hacer un bucle `while`, el cual se mantendrá activo hasta que la variable de control llamada `counter`, sea superior al tiempo total de medida configurado por el usuario. Dentro de este bucle `while` encontramos un bucle `if`, que se activa si la variable bandera es `TRUE`, esta variable únicamente es así cuando se activa la **función ISR** del timer. En él encontramos una vez más las funciones que inician la conversión, las medidas de V<sub>CELL</sub> e I<sub>CELL</sub> y su envío al host.
 
 ### Función para la Voltametría Cíclica
 
-El desarrollo de la función en este caso, está basado en el **workflow** de la voltametría cíclica, y en el propio concepto de voltametría en sí. Es decir, en términos generales, pretendemos dar un voltaje inicial al electrodo de trabajo (WE). Hacer un barrido creciente de voltaje hasta llegar al potencial objetivo 1 (`eVertex1`). Una vez ahí, hacer un barrido decreciente de voltaje hasta llegar al potencial objetivo 2 (`eVertex2`). I de ahí, volver a hacer un barrido creciente de potencial hasta llegar al objetivo. Este procedimiento lo repetiremos tantas veces como ciclos nos indique el usuario. I los datos serán enviados al host cada vez transcurra el *sampling period* indicado, por lo que activaremos el sensor y este nos devolverá la medida de V~CELL~ ~REAL~ y I~CELL~.
+El desarrollo de la función en este caso, está basado en el **workflow** de la voltametría cíclica, y en el propio concepto de voltametría en sí. Es decir, en términos generales, pretendemos dar un voltaje inicial al electrodo de trabajo (WE). Hacer un barrido creciente de voltaje hasta llegar al potencial objetivo 1 (`eVertex1`). Una vez ahí, hacer un barrido decreciente de voltaje hasta llegar al potencial objetivo 2 (`eVertex2`). I de ahí, volver a hacer un barrido creciente de potencial hasta llegar al objetivo. Este procedimiento lo repetiremos tantas veces como ciclos nos indique el usuario. I los datos serán enviados al host cada vez transcurra el *sampling period* indicado, por lo que activaremos el sensor y este nos devolverá la medida de V<sub>CELL</sub> <sub>REAL</sub> y I<sub>CELL</sub>.
 
 Esto a modo de idea general. Haciendo el barrido de potencial indicado, si el funcionamiento es el esperado, obtendremos la típica curva tan característica de la voltametría cíclica. Pero vamos por partes, que probablemente se va a entender mejor. Dentro de la rama creada bajo el nombre de **`feature/voltammetry`**, hemos definido dos funciones distintas dentro del fichero **`cyclic_voltammetry.c`**, que puede encontrarse en el directorio `../Core/Src/components`. 
 
-La primera es una función llamada _Voltammetry_Config_, que pretende ejecutarse una única vez una vez el host envía la indicación de que desea realizar una voltametría cíclica. Dentro de esta cerramos el relé para poder llevar a cabo las distintas mediciones, fijamos el valor de V~CELL~ al voltaje inicial deseado por el usuario (`eBegin`), y definimos el período de sampleo del timer, como el cociente entre `eStep` y `scanRate`.
+La primera es una función llamada _Voltammetry_Config_, que pretende ejecutarse una única vez una vez el host envía la indicación de que desea realizar una voltametría cíclica. Dentro de esta cerramos el relé para poder llevar a cabo las distintas mediciones, fijamos el valor de V<sub>CELL</sub> al voltaje inicial deseado por el usuario (`eBegin`), y definimos el período de sampleo del timer, como el cociente entre `eStep` y `scanRate`.
 
-La segunda función es la que engloba la mayor parte del proceso, dónde se va a llevar a cabo el barrido de potencial y dónde se tomarán las distintas medidas que se enviarán al host. Empezamos inicializando el timer, fijando el V~CELL~ a eBegin y el voltaje objetivo al deseado por el usuario (introducido como input en eVertex1). Definimos también una variable llamada measure como `FALSE`, esta nos permitirá obtener el control sobre cada vez que el timer se active y realice una medida.
+La segunda función es la que engloba la mayor parte del proceso, dónde se va a llevar a cabo el barrido de potencial y dónde se tomarán las distintas medidas que se enviarán al host. Empezamos inicializando el timer, fijando el V<sub>CELL</sub> a eBegin y el voltaje objetivo al deseado por el usuario (introducido como input en eVertex1). Definimos también una variable llamada measure como `FALSE`, esta nos permitirá obtener el control sobre cada vez que el timer se active y realice una medida.
 
-La segunda función _Volatmmetry Value_ es la que engloba la mayor parte del proceso, dónde se va a llevar a cabo el barrido de potencial y dónde se tomarán las distintas medidas que se enviarán al host. Empezamos inicializando el timer, fijando el V~CELL~ a `eBegin` y el voltaje objetivo al deseado por el usuario (introducido como input en eVertex1). Definimos también una variable llamada `measure` cómo `FALSE`, esta nos permitirá obtener el control sobre cada vez que el *timer* se active y realice una medida. Cerramos el relé y empezamos la voltametría. Cada vez que transcurre el sampling period, medimos V~CELL~ y I~CELL~ y enviamos los datos al host. Mientras V~CELL~ no sea igual al potencial objetivo definido aplicamos un incremento eStep. Vamos procediendo de este modo hasta llegar al potencial objetivo. Una vez llegado a este punto fijamos como nuevo objetivo `eVertex2` (definido también por el usuario cómo input). Tomamos medidas y aplicamos variaciones eStep cada vez que transcurre el *sampling period*. Hasta llegar a `eVertex2`, dónde definimos como objetivo eBegin. Llegados a eBegin, si se ha llegado al número de ciclos definido como input, paramos la medida y abrimos relé. En caso contrario procedimos a un nuevo ciclo siguiendo el mismo procedimiento descrito anteriormente.
+La segunda función _Volatmmetry Value_ es la que engloba la mayor parte del proceso, dónde se va a llevar a cabo el barrido de potencial y dónde se tomarán las distintas medidas que se enviarán al host. Empezamos inicializando el timer, fijando el V<sub>CELL</sub> a `eBegin` y el voltaje objetivo al deseado por el usuario (introducido como input en eVertex1). Definimos también una variable llamada `measure` cómo `FALSE`, esta nos permitirá obtener el control sobre cada vez que el *timer* se active y realice una medida. Cerramos el relé y empezamos la voltametría. Cada vez que transcurre el sampling period, medimos V<sub>CELL</sub> y I<sub>CELL</sub> y enviamos los datos al host. Mientras V<sub>CELL</sub> no sea igual al potencial objetivo definido aplicamos un incremento eStep. Vamos procediendo de este modo hasta llegar al potencial objetivo. Una vez llegado a este punto fijamos como nuevo objetivo `eVertex2` (definido también por el usuario cómo input). Tomamos medidas y aplicamos variaciones eStep cada vez que transcurre el *sampling period*. Hasta llegar a `eVertex2`, dónde definimos como objetivo eBegin. Llegados a eBegin, si se ha llegado al número de ciclos definido como input, paramos la medida y abrimos relé. En caso contrario procedimos a un nuevo ciclo siguiendo el mismo procedimiento descrito anteriormente.
 
 ## Resultados Obtenidos
 
@@ -303,7 +303,7 @@ Realizando una medición cada 500ms y variando el valor de la resistencia variab
 </p>	
 - *Validación técnica*
 
-Realizando una medición cada 100ms y fijando una tensión de V~CELL~ de 0,5 V hemos obtenido los siguiente resultados, donde la corriente estaba entorno a 2,3E-5 amperios.  
+Realizando una medición cada 100ms y fijando una tensión de V<sub>CELL</sub> de 0,5 V hemos obtenido los siguiente resultados, donde la corriente estaba entorno a 2,3E-5 amperios.  
 
 <p align="center">
 <a href="Docs/assets/Resultados_CA_validacion.png">
