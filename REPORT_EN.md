@@ -278,6 +278,7 @@ With a sampling rate of 500ms and changing the potentiometer resistance value th
 <img src="Docs/assets/Resultados_Crono.png" alt="Resultados Crono" style="zoom:90%" />
 </a>
 </p>	
+
 - *Technical validation*
 
 Sampling rate is set to 100ms, and V<sub>CELL</sub> is fixed at 0.5V. The results obtained are shown below. It is observed how current is around 2,3E-5 A. 
@@ -310,6 +311,7 @@ It has been checked if we were sending data points properly and the timer was wo
 <img src="Docs/assets/Resultados_Volta.png" alt="Resultados Volta" style="zoom:90%" />
 </a>
 </p>
+
 - *Technical validation*
 
 In the same way, a technical validation of cyclic voltammetry has been carried out, establishing a starting point of 0V (`eBegin`), vertex 1 at 0.6V, vertex 2 at -0.6V and two cycles. The results obtained are the ones shown below, where it is seen how the potential arrives at really similar vertices and for both cycles the results are almost the same.
