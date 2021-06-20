@@ -99,7 +99,7 @@ This technique consists of applying a voltage during a certain time interval in 
 
 #### Flowchart (CA)
 
-El siguiente diagrama de flujo es el que hemos realizado para la implementación de la cronoamperometría. 
+The following flowchart is the one we have made for the implementation of chronoamperometry. 
 
 <p align="center">
 <a href="Docs/assets/imgs/ca-flow.png">
