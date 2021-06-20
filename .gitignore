@@ -1,8 +1,7 @@
 
 # Project stuff
-.cproject
-.mxproject
-.project
+.metadata/
+
 *.launch
 .settings/
 Debug/

@@ -308,7 +308,7 @@ El informe debe de cumplir con los siguientes requerimientos:
 - Debe de contener una tabla de contenidos.
 - Mientras que los puntos/apartados del informe son libres, el informe debe de contener:
     - Una introducción al proyecto (en qué consiste, qué es un potenciostato, cuáles son los objetivos, en qué consisten las medidas electroquímicas que hay que hacer y para qué sirven,...).
- Git/GitHub.
+     Git/GitHub.
     - Un diagrama de flujo y una explicación de vuestra aplicación final (que puede ser parecido o no al de este guión).
     - Los resultados obtenidos.
     - Conclusiones extraídas tanto del proyecto como de la asignatura.

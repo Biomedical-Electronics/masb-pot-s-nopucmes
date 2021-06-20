@@ -23,12 +23,16 @@
 #define START_CA_MEAS		0x02
 #define STOP_MEAS			0x03
 
+#define CV					0x04
+#define CA					0x05
+#define IDLE				0x06
+
 #ifndef TRUE
-    #define TRUE				1
+#define TRUE				1
 #endif
 
 #ifndef FALSE
-    #define FALSE				0
+#define FALSE				0
 #endif
 
 struct Data_S {
@@ -41,6 +45,7 @@ struct Data_S {
 };
 
 // Prototypes.
+void MASB_COMM_S_setUart(UART_HandleTypeDef *newHuart);
 void MASB_COMM_S_waitForMessage(void);
 _Bool MASB_COMM_S_dataReceived(void);
 uint8_t MASB_COMM_S_command(void);
