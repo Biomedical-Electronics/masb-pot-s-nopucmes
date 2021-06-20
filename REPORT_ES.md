@@ -177,8 +177,8 @@ El siguiente flujo muestra la operativa del usuario con la aplicación [viSens-S
 Para el diagrama de flujo del microcontrolador hemos creado un diagrama específico para nuestro código con la herramienta [draw.io](http://draw.io/).
 
 <p align="center">
-<a href="Docs/assets/micro.png">
-<img src="Docs/assets/micro.png" alt="Diagrama del microcontrolador" />
+<a href="Docs/assets/MICRO.png">
+<img src="Docs/assets/MICRO.png" alt="Diagrama del microcontrolador" />
 </a>
 </p>
 > Diagrama de flujo del microcontrolador implementado en el proyecto.
