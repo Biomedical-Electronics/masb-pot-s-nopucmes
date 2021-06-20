@@ -301,6 +301,7 @@ Realizando una medición cada 500ms y variando el valor de la resistencia variab
 <img src="Docs/assets/Resultados_Crono.png" alt="Resultados Crono" style="zoom:90%" />
 </a>
 </p>	
+
 - *Validación técnica*
 
 Realizando una medición cada 100ms y fijando una tensión de V<sub>CELL</sub> de 0,5 V hemos obtenido los siguiente resultados, donde la corriente estaba entorno a 2,3E-5 amperios.  
@@ -333,6 +334,7 @@ También hemos realizado la prueba para ver si el envío de puntos y el *timer* 
 <img src="Docs/assets/Resultados_Volta.png" alt="Resultados Volta" style="zoom:90%" />
 </a>
 </p>
+
 - *Validación técnica*
 
 De la misma manera, también se ha realizado una validación técnica de la voltametría cíclica, fijando el punto inicial a 0V, el vértice 1 a 0.6V, el vértice 2 a -0.6V y dos ciclos. Los resultados obtenidos son los siguientes donde vemos que el potencial llega a ambos vértices de la voltametría y para ambos ciclos los resultados son muy similares.
