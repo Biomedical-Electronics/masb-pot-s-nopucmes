@@ -173,8 +173,8 @@ The following flow shows the user's operations with the [viSens-S](https://githu
 For the microcontroller flow chart, a specific diagram has been created for our code by using the [draw.io](http://draw.io/) tool.
 
 <p align="center">
-<a href="Docs/assets/micro.png">
-<img src="Docs/assets/micro.png" alt="Diagrama del microcontrolador" />
+<a href="Docs/assets/MICRO.png">
+<img src="Docs/assets/MICRO.png" alt="Diagrama del microcontrolador" />
 </a>
 </p>
 Microcontroller flow diagram implemented in the project.
