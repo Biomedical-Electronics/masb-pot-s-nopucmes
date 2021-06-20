@@ -27,7 +27,7 @@ The potentiostat is an electronic device required to control a three-electrode c
 <img src="Docs/assets/Potentiostat.png" alt="Potentiostat" />
 </a>
 </p>
->
+
 > Schematic of the electronics of a potentiostat. Image [source](https://es.wikipedia.org/wiki/Potenciostato).
 
 ## Chronoamperometry
@@ -38,6 +38,7 @@ The potentiostat is an electronic device required to control a three-electrode c
 <img src="Docs/assets/Chronoamperometry.jpg" alt="Chronoamperometry" />
 </a>
 </p>
+
 > Image where the change in voltage generated and the shape of the response curve can be seen. As we have seen previously, the response curve is a function of current and time, while the excitation curve is a function of voltage and time. Image [source](https://en.wikipedia.org/wiki/Chronoamperometry).
 
 ## Cyclic voltammetry
@@ -49,6 +50,7 @@ The potentiostat is an electronic device required to control a three-electrode c
 <img src="Docs/assets/CV_excitation_signal.jpg" alt="CV Excitation Signal" />
 </a>
 </p>
+
 > Excitation signal to perform cyclic voltammetry (performing two cycles). Image [source](https://chem.libretexts.org/Bookshelves/Analytical_Chemistry/Supplemental_Modules_(Analytical_Chemistry)/Instrumental_Analysis/Cyclic_Voltammetry).
 
 ## viSens-S Application
@@ -106,6 +108,7 @@ The following flowchart is the one we have made for the implementation of chrono
 <img src="Docs/assets/imgs/ca-flow.png" alt="Diagrama de flujo de la cronoamperometría" />
 </a>
 </p>
+
 > Flowchart of the implemented function for chronoamperometry.
 
 ### Implementation Cyclic Voltammetry
@@ -154,7 +157,7 @@ The following flow chart corresponds to the cyclic voltammetry. We can see how t
 <img src="Docs/assets/imgs/cv-flow.png" alt="Diagrama de flujo de la voltammetría cíclica" />
 </a>
 </p>
->
+
 > Flow diagram of the implemented function for cyclic voltammetry.
 
 ### Application flow chart
@@ -166,6 +169,7 @@ The following flow shows the user's operations with the [viSens-S](https://githu
 <img src="Docs/assets/imgs/app-flow.png" alt="Diagrama de flujo de la aplicación" />
 </a>
 </p>
+
 > Application flow chart.
 
 ### Microcontroller flow diagram
@@ -177,6 +181,7 @@ For the microcontroller flow chart, a specific diagram has been created for our 
 <img src="Docs/assets/MICRO.png" alt="Diagrama del microcontrolador" />
 </a>
 </p>
+
 Microcontroller flow diagram implemented in the project.
 
 ## Project development
